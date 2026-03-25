@@ -13,5 +13,8 @@
     "nextra-theme-docs": "^4.6.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "pagefind": "^1.4.0"
   }
 }
