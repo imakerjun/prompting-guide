@@ -529,16 +529,26 @@ nav[aria-label="table of contents"] a:hover {
   background: rgba(255,255,255,0.06);
 }
 
-/* Slide content frame */
+/* Slide content frame — optimized for lecture recording */
 .slide-frame {
   flex: 1;
-  overflow: hidden;
-  padding: 40px 80px;
-  max-width: 1000px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 48px 100px;
+  max-width: 960px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
 }
+
+/* Enlarge text for recording readability */
+.slide-frame h1 { font-size: 2.2em !important; margin-bottom: 0.6em !important; }
+.slide-frame h2 { font-size: 1.8em !important; margin-top: 0 !important; margin-bottom: 0.5em !important; border-bottom: none !important; }
+.slide-frame h3 { font-size: 1.3em !important; }
+.slide-frame p { font-size: 1.15em !important; line-height: 1.75 !important; }
+.slide-frame li { font-size: 1.1em !important; line-height: 1.7 !important; }
+.slide-frame pre { font-size: 1.05em !important; }
+.slide-frame code { font-size: 1em !important; }
 
 .slide-frame img {
   max-height: 45vh;
@@ -595,7 +605,7 @@ nav[aria-label="table of contents"] a:hover {
 }
 
 .slide-chrome-hidden .slide-frame {
-  padding: 32px 60px;
+  padding: 56px 80px;
 }
 
 .slide-chrome-hidden .slide-frame img {
