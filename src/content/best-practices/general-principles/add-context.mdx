@@ -1,0 +1,159 @@
+---
+title: 맥락을 추가하여 성능 향상
+---
+
+import { Callout, Tabs } from 'nextra/components'
+
+# 맥락을 추가하여 성능 향상
+
+<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#add-context-to-improve-performance">공식문서에서 보기</OriginalDocLink>
+
+지시의 맥락이나 동기를 제공하면 — 예를 들어, 왜 그런 동작이 중요한지 Claude에게 설명하면 — Claude가 목표를 더 잘 이해하고 더 타겟팅된 응답을 제공할 수 있습니다.
+
+같은 "요약해줘"라도 **누가, 왜, 어디에 쓸 건지** 알려주면 결과가 완전히 달라집니다. "요약해줘"라고만 하면 Claude는 일반적인 요약을 제공하지만, "임원 보고용으로 요약해줘"라고 하면 핵심 의사결정 포인트 중심으로 구조화된 요약을 만들어 줍니다.
+
+이것은 사람 사이의 커뮤니케이션과 동일합니다. "이거 정리해줘"라고 부탁하는 것보다 "내일 팀장님 보고에 쓸 건데, 예산 초과 원인 위주로 정리해줘"라고 말하면 훨씬 원하는 결과물에 가까워지죠. Claude는 설명으로부터 일반화할 수 있을 만큼 충분히 똑똑하기 때문에, **"왜"를 알려주면 "무엇을"과 "어떻게"를 스스로 조정**합니다.
+
+<Callout emoji="💡">
+**핵심 원칙**: "무엇을 해줘"보다 **"왜 필요한지"**를 함께 알려주세요. Claude는 목적을 이해하면 형식, 톤, 깊이를 자동으로 맞춥니다. 한 줄의 맥락이 열 줄의 지시를 대체할 수 있습니다.
+</Callout>
+
+## 예시: TTS 출력 형식
+
+<Tabs items={['❌ 효과가 낮은 방법', '✅ 더 효과적인 방법']}>
+  <Tabs.Tab>
+```
+줄임표를 절대 사용하지 마
+```
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+당신의 응답은 텍스트 음성 변환(TTS) 엔진에 의해 읽혀질
+것이므로, TTS 엔진이 줄임표를 어떻게 발음해야 할지 모르기
+때문에 절대 줄임표를 사용하지 마세요.
+```
+  </Tabs.Tab>
+</Tabs>
+
+## 예시: 이메일 요약
+
+<Tabs items={['❌ 효과가 낮은 방법', '✅ 더 효과적인 방법']}>
+  <Tabs.Tab>
+```
+이 이메일 스레드 요약해줘
+```
+
+Claude는 전체 내용을 고르게 요약합니다. 중요한 포인트와 사소한 내용이 섞여서, 결국 다시 읽어야 할 수 있습니다.
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+이 이메일 스레드를 임원 브리핑용으로 요약해줘.
+예산 초과 원인과 해결 방안이 핵심이야.
+CFO가 5분 안에 파악할 수 있도록 간결하게 정리해줘.
+```
+
+Claude는 예산 관련 내용을 중심으로, 의사결정에 필요한 정보만 추려서 구조화합니다.
+  </Tabs.Tab>
+</Tabs>
+
+## 예시: 데이터 분석
+
+<Tabs items={['❌ 효과가 낮은 방법', '✅ 더 효과적인 방법']}>
+  <Tabs.Tab>
+```
+이 데이터 분석해줘
+```
+
+Claude는 평균, 추세, 이상치 등 일반적인 통계 분석을 제공합니다.
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+마케팅팀 상반기 캠페인 성과 데이터를 분석해줘.
+다음 달 예산 회의에서 발표할 거야.
+"이 채널에 예산을 더 투입해야 한다"는 근거를 만들어야 해.
+```
+
+Claude는 채널별 ROI 비교에 집중하고, 예산 증액을 정당화할 수 있는 데이터 포인트를 강조합니다.
+  </Tabs.Tab>
+</Tabs>
+
+---
+
+## 실무에서 이렇게 쓰세요
+
+맥락 추가는 **가장 적은 노력으로 가장 큰 품질 향상**을 가져오는 테크닉입니다. 아래는 직장인들이 바로 적용할 수 있는 실무 사례입니다.
+
+<UseCaseCard
+  emoji="📧"
+  title="이메일 작성"
+  description="수신자와의 관계, 이메일 목적을 알려주면 톤이 자동으로 조절됩니다"
+  prompt={`다음 내용으로 이메일을 작성해줘.
+
+내용: 프로젝트 일정이 2주 지연될 것 같다
+수신자: 3년째 함께 일하는 외부 파트너사 PM
+목적: 지연 사실을 알리되, 장기적 신뢰 관계를 유지하고 싶다
+톤: 솔직하되 프로페셔널하게`}
+/>
+
+<UseCaseCard
+  emoji="📊"
+  title="보고서 작성"
+  description="보고서의 용도를 명시하면 깊이와 형식이 달라집니다"
+  prompt={`아래 실적 데이터로 보고서를 작성해줘.
+
+<data>
+{분기별 매출 데이터}
+</data>
+
+용도: 내일 오전 CTO 주관 경영 회의에서 5분 발표
+핵심 메시지: 기술 투자가 매출 성장으로 이어지고 있다는 근거
+형식: 핵심 수치 3개 + 한 줄 해석, 전체 1페이지 이내`}
+/>
+
+<UseCaseCard
+  emoji="🎯"
+  title="기획서 작성"
+  description="대상 독자와 의사결정 포인트를 명시하면 설득력이 높아집니다"
+  prompt={`신규 사내 교육 프로그램 기획서를 작성해줘.
+
+배경: 주니어 개발자 이직률이 작년 대비 15% 증가
+대상 독자: 인사팀장 (예산 승인 권한자)
+의사결정 포인트: "이 프로그램에 투자하면 이직률이 낮아질까?"
+포함할 내용: 비용 대비 효과, 타사 벤치마크, 3개월 파일럿 제안`}
+/>
+
+### 더 알아보기
+
+<ResourceLink
+  href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#add-context-to-improve-performance"
+  type="official"
+  title="Anthropic 공식: Add context to improve performance"
+  description="맥락 추가로 성능을 높이는 공식 가이드라인"
+/>
+<ResourceLink
+  href="https://github.com/anthropics/courses/blob/master/prompt_engineering_interactive_tutorial/Anthropic%201P/02_Being_Clear_and_Direct.ipynb"
+  type="cookbook"
+  title="Anthropic Tutorial: Being Clear and Direct"
+  description="맥락과 명확성을 다루는 실습 노트북 — 맥락 추가 예시 포함"
+/>
+
+---
+
+## 연습문제
+
+### 문제: 신입사원 온보딩 문서 작성
+
+<Quiz
+  hint="누가 읽을 문서인지, 어떤 상황에서 참고할 건지 맥락을 추가하세요"
+  answer={<>
+    <pre><code>{`우리 팀 신입사원 온보딩 가이드를 작성해줘.
+
+대상: 개발 경험 1-2년차, 우리 팀 도메인(결제 시스템)은 처음인 사람
+상황: 입사 첫 주에 혼자 읽으면서 따라할 수 있어야 해
+목적: 2주 안에 간단한 버그 수정 PR을 올릴 수 있는 수준까지 안내
+포함: 개발 환경 세팅, 코드 구조 파악법, 첫 PR 올리는 절차`}</code></pre>
+    <p>"온보딩 문서 만들어줘"와 비교하면, 대상자의 수준, 활용 상황, 도달 목표를 명시하여 실용적인 문서가 나옵니다.</p>
+  </>}
+>
+"팀 온보딩 문서를 만들어줘"라는 요청에 **맥락을 추가**하여, 실제로 신입사원이 바로 활용할 수 있는 프롬프트로 개선하세요.
+</Quiz>

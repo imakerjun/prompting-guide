@@ -1,0 +1,249 @@
+---
+title: 예시를 효과적으로 사용하기
+---
+
+import { Callout, Tabs } from 'nextra/components'
+
+# 예시를 효과적으로 사용하기
+
+<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#use-examples-effectively">공식문서에서 보기</OriginalDocLink>
+
+예시는 Claude의 출력 형식, 톤, 구조를 조정하는 가장 신뢰할 수 있는 방법 중 하나입니다. 잘 만들어진 몇 가지 예시(few-shot 또는 multishot 프롬프팅으로 알려진)는 정확도와 일관성을 극적으로 향상시킬 수 있습니다.
+
+예시를 추가할 때 다음을 지켜주세요:
+
+- **관련성**: 실제 사용 사례를 밀접하게 반영하세요.
+- **다양성**: 엣지 케이스를 다루고, Claude가 의도하지 않은 패턴을 학습하지 않도록 충분히 다양하게 만드세요.
+- **구조화**: 예시를 `<example>` 태그로 감싸서(여러 예시는 `<examples>` 태그로) Claude가 지시 사항과 구분할 수 있도록 하세요.
+
+<Callout emoji="🎯">
+최상의 결과를 위해 **3–5개의 예시**를 포함하세요. Claude에게 예시의 관련성과 다양성을 평가하게 하거나, 초기 세트를 기반으로 추가 예시를 생성하도록 요청할 수도 있습니다.
+</Callout>
+
+---
+
+## 예시 패턴 1: 톤과 스타일 조정
+
+예시 없이 프롬프트하면 Claude는 기본적으로 격식 있고 딱딱한 톤으로 응답합니다. 원하는 톤을 직접 설명하는 것보다, **예시를 보여주는 것이 훨씬 효과적**입니다.
+
+<Tabs items={['❌ 예시 없이', '✅ 예시와 함께']}>
+  <Tabs.Tab>
+```
+산타가 크리스마스에 선물을 가져다줄까요?
+```
+
+Claude의 응답: 격식 있고 로봇 같은 톤
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+다음 대화를 이어서 "A"로서 다음 줄을 작성해주세요.
+
+Q: 이빨 요정은 진짜야?
+A: 물론이지, 얘야. 이빨을 잘 싸서 베개 밑에 넣어놔.
+   아침에 뭔가가 기다리고 있을지도 몰라.
+
+Q: 산타가 크리스마스에 선물을 가져다줄까요?
+```
+
+Claude의 응답: 따뜻하고 아이에게 맞는 톤
+  </Tabs.Tab>
+</Tabs>
+
+---
+
+## 예시 패턴 2: 출력 형식 학습
+
+Claude에게 원하는 출력 형식을 단계별로 설명하는 것보다, **올바르게 포매팅된 예시를 보여주면 Claude가 패턴을 추론**합니다.
+
+```xml
+은빛마을은 비범한 사람들이 모인 매력적인 마을이었습니다.
+그중에는 지역 의료원에서 수술 기법을 혁신한 신경외과의
+이민수 박사가 있었습니다...
+
+<individuals>
+1. 이민수 [신경외과의]
+2. 김서연 [건축가]
+3. 박현우 [음악가 겸 작곡가]
+4. 정하은 [셰프]
+</individuals>
+
+강변마을의 중심에는 팜투테이블 레스토랑 '초록접시'를 운영하는
+오준혁 셰프가 있습니다...
+
+<individuals>
+1. 오준혁 [셰프]
+2. 최은서 [사서]
+3. 정이슬 [화가]
+4. 한준호 [코치]
+</individuals>
+
+참나무골은 세 명의 뛰어난 인재들이 사는 작은 마을입니다.
+마을의 활기찬 농산물 시장에서는 유기농 농부인
+김나영 씨를 만날 수 있습니다...
+```
+
+<Callout emoji="💡">
+이 예시에서 Claude는 별도의 포매팅 지시 없이도, **2개의 예시 패턴을 보고** 세 번째 텍스트에서 같은 형식(`이름 [직업]`)으로 인물 정보를 추출합니다.
+</Callout>
+
+---
+
+## 예시 패턴 3: 분류 작업
+
+이메일을 카테고리로 분류하는 작업에서, 예시를 통해 분류 기준과 출력 형식을 동시에 가르칠 수 있습니다.
+
+```xml
+다음 이메일을 아래 카테고리 중 하나로 분류하세요.
+카테고리: (A) 구매 전 문의 (B) 고장/결함 (C) 결제 문의 (D) 기타
+
+<examples>
+<example>
+이메일: 믹서기에서 이상한 소리가 나고 탄 플라스틱 냄새가
+납니다. 교체가 필요합니다.
+카테고리: B
+</example>
+<example>
+이메일: 믹서기로 페인트도 섞을 수 있나요, 아니면 음식
+전용인가요?
+카테고리: A
+</example>
+</examples>
+
+이메일: 해지한 지 4개월인데 아직도 매달 요금이 빠지고
+있어요!!! 어떻게 된 건가요???
+카테고리:
+```
+
+<Callout emoji="📝">
+**핵심 포인트**: 예시에서 카테고리 **글자만** 출력하는 패턴을 보여줬으므로, Claude도 장황한 설명 없이 `C`만 응답합니다. 이것이 예시의 힘입니다 — 형식과 기준을 동시에 전달합니다.
+</Callout>
+
+---
+
+## 실무에서 이렇게 쓰세요
+
+Few-shot 프롬프팅은 **반복적이고 일관된 출력**이 필요한 업무에서 가장 강력합니다.
+
+<UseCaseCard
+  emoji="✍️"
+  title="브랜드 톤 일관성 유지"
+  description="마케팅 팀이 SNS 게시물을 대량 생산할 때, 브랜드 톤을 예시로 보여주면 일관성을 유지할 수 있습니다."
+  prompt={`우리 브랜드의 SNS 게시물 톤은 다음과 같습니다:
+
+<examples>
+<example>
+주제: 신제품 출시
+게시물: 드디어 왔다! 🎉 올여름을 책임질 아이스 라떼 시리즈. 한 모금이면 더위가 도망갈걸? ☕️
+</example>
+<example>
+주제: 할인 이벤트
+게시물: 잠깐, 이 가격 실화? 😱 이번 주만 전 메뉴 20% OFF! 지금 안 오면 후회할지도~ 🏃‍♂️
+</example>
+</examples>
+
+주제: 여름 시즌 신메뉴 3종 출시
+위 톤에 맞는 게시물을 작성해줘.`}
+/>
+
+<UseCaseCard
+  emoji="📋"
+  title="고객 리뷰 감성 분석"
+  description="CS팀이 수백 개의 리뷰를 일관된 형식으로 분류할 때"
+  prompt={`고객 리뷰를 분석하여 다음 형식으로 분류해줘.
+
+<examples>
+<example>
+리뷰: 배송이 빠르고 포장도 꼼꼼했어요. 재구매 의사 있습니다.
+감성: 긍정
+키워드: 배송, 포장
+점수: 5/5
+</example>
+<example>
+리뷰: 색상이 사진과 다르고 실밥이 나와있어서 실망했습니다.
+감성: 부정
+키워드: 색상차이, 품질
+점수: 2/5
+</example>
+</examples>
+
+리뷰: {분석할 리뷰}`}
+/>
+
+<UseCaseCard
+  emoji="📄"
+  title="계약서/보고서 요약 형식 통일"
+  description="법무팀이 계약서 검토 요약을 일관된 형식으로 뽑아낼 때, 예시 하나로 형식을 가르칩니다."
+  prompt={`계약서를 검토하고 다음 형식으로 요약해줘.
+
+<example>
+계약 상대: ABC 주식회사
+계약 기간: 2024.01.01 ~ 2024.12.31
+핵심 조건: 월 500만원, 분기별 정산
+리스크: 조기 해지 시 위약금 20% 조항 (제8조)
+검토 의견: 위약금 비율 협상 필요
+</example>
+
+<contract>
+{검토할 계약서 내용}
+</contract>`}
+/>
+
+<Callout emoji="📊">
+**실제 성과 데이터**: Anthropic의 분류 cookbook에 따르면, few-shot 예시 5개를 추가하면 보험 고객 문의 분류 정확도가 **70% → 94%**로 향상되었고, 사고 과정(CoT)까지 결합하면 **97%**에 도달했습니다. Fortune 500 기업의 PII(개인정보) 제거 작업에서는 예시 2개만으로도 **20% 정확도 향상**을 달성했습니다.
+</Callout>
+
+### 더 알아보기
+
+<ResourceLink
+  href="https://github.com/anthropics/courses/blob/master/prompt_engineering_interactive_tutorial/Anthropic%201P/07_Using_Examples_Few-Shot_Prompting.ipynb"
+  type="cookbook"
+  title="Anthropic Tutorial: Few-Shot Prompting"
+  description="Jupyter 노트북으로 직접 실습하는 few-shot 프롬프팅"
+/>
+<ResourceLink
+  href="https://docs.anthropic.com/en/prompt-library"
+  type="tool"
+  title="Anthropic Prompt Library"
+  description="다양한 업무 시나리오별 프롬프트 템플릿 — 예시 패턴 참고에 최적"
+/>
+<ResourceLink
+  href="https://www.anthropic.com/news/prompt-engineering-for-business-performance"
+  type="article"
+  title="Anthropic: Prompt Engineering for Business Performance"
+  description="Fortune 500 기업 사례 — PII 제거에서 few-shot 예시로 20% 정확도 향상"
+/>
+<ResourceLink
+  href="https://platform.claude.com/cookbook/capabilities-classification-guide"
+  type="cookbook"
+  title="Anthropic Classification Cookbook"
+  description="보험 티켓 분류 — few-shot 5개로 70%→94%, CoT 결합 시 97%"
+/>
+
+---
+
+## 연습문제
+
+### 문제: 이메일 분류기 만들기
+
+카테고리: **(A) 구매 전 문의 (B) 고장/결함 (C) 결제 문의 (D) 기타**
+
+**조건**: Claude의 출력이 각 이메일에 대해 **카테고리 글자(A/B/C/D)만** 나오도록 few-shot 예시를 설계하세요.
+
+<Quiz
+  hint="<examples> 태그 안에 2-3개의 이메일+카테고리 쌍을 보여주고, 출력은 글자만 나오는 패턴을 만드세요"
+  answer={<>
+    <pre><code>{`다음 이메일을 카테고리로 분류하세요.\n카테고리: (A) 구매 전 문의 (B) 고장/결함 (C) 결제 문의 (D) 기타\n\n<examples>\n<example>\n이메일: 이 제품의 배터리 수명이 얼마나 되나요?\n카테고리: A\n</example>\n<example>\n이메일: 배송받은 제품 화면에 금이 가 있어요.\n카테고리: B\n</example>\n<example>\n이메일: 지난달 이중 청구된 것 같은데 확인 부탁드립니다.\n카테고리: C\n</example>\n</examples>\n\n이메일: {분류할 이메일}\n카테고리:`}</code></pre>
+    <p>핵심: 예시에서 카테고리 글자만 출력하는 패턴을 보여주면, Claude도 같은 형식을 따릅니다.</p>
+  </>}
+>
+아래 이메일들을 올바르게 분류하는 few-shot 프롬프트를 작성해보세요:
+1. "믹서기에서 이상한 소리가 납니다. 교체 필요" → B
+2. "해지한 지 4개월인데 아직도 요금이 빠져요!!!" → C
+3. "여기 어떻게 온 건지 모르겠어요. 도와줘요." → D
+</Quiz>
+
+---
+
+<Callout emoji="📖">
+이 예시들은 Anthropic의 공식 프롬프트 엔지니어링 튜토리얼 [Chapter 7: Using Examples (Few-Shot Prompting)](https://github.com/anthropics/courses/blob/master/prompt_engineering_interactive_tutorial/Anthropic%201P/07_Using_Examples_Few-Shot_Prompting.ipynb)을 참고하여 한국어로 재구성한 것입니다.
+</Callout>

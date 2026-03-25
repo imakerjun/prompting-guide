@@ -1,0 +1,226 @@
+---
+title: 명확하고 직접적으로
+---
+
+import { Callout, Tabs } from 'nextra/components'
+
+# 명확하고 직접적으로
+
+<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#be-clear-and-direct">공식문서에서 보기</OriginalDocLink>
+
+Claude는 명확하고 구체적인 지시에 잘 반응합니다. 원하는 출력에 대해 구체적으로 설명하면 결과를 향상시킬 수 있습니다. "기대 이상의" 동작을 원한다면, 모호한 프롬프트에서 모델이 추론하도록 맡기지 말고 명시적으로 요청하세요.
+
+Claude를 여러분의 규범과 워크플로우에 대한 맥락이 없는, **뛰어나지만 새로 입사한 직원**이라고 생각하세요. 원하는 것을 더 정확하게 설명할수록 결과가 더 좋아집니다.
+
+<Callout emoji="✨">
+**황금률**: 해당 작업에 대한 맥락을 최소한으로 알고 있는 동료에게 프롬프트를 보여주고 따라 해보라고 요청해 보세요. 그 동료가 혼란스러워한다면, Claude도 마찬가지일 것입니다.
+</Callout>
+
+- 원하는 출력 형식과 제약 조건을 구체적으로 명시하세요.
+- 단계의 순서나 완전성이 중요한 경우, 번호가 매겨진 목록이나 글머리 기호를 사용하여 순차적으로 지시 사항을 제공하세요.
+
+## 예시: 성과 보고서 작성
+
+<Tabs items={['❌ 효과가 낮은 방법', '✅ 더 효과적인 방법']}>
+  <Tabs.Tab>
+```
+보고서 써줘
+```
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+지난 분기 마케팅팀 성과 보고서를 써줘.
+핵심 KPI(클릭률, 전환율, CPA), 전월 대비 증감,
+다음 분기 개선 제안을 포함해줘.
+형식은 임원 보고용으로, 한 페이지 이내로 간결하게.
+```
+  </Tabs.Tab>
+</Tabs>
+
+---
+
+## 실무에서 이렇게 쓰세요
+
+"명확하고 직접적으로"는 단순한 프롬프팅 팁이 아니라, **업무 커뮤니케이션의 본질**입니다. 아래는 직장인들이 바로 적용할 수 있는 실무 사례입니다.
+
+<UseCaseCard
+  emoji="📧"
+  title="이메일 작성"
+  description="거래처에 보낼 미팅 일정 조율 이메일을 작성할 때"
+  prompt={`다음 조건으로 거래처 담당자에게 보낼 미팅 일정 조율 이메일을 작성해줘.
+- 수신자: 김철수 부장 (ABC 파트너스)
+- 목적: 2분기 프로젝트 킥오프 미팅
+- 제안 일시: 3월 25일(화) 또는 3월 27일(목), 오후 2-4시
+- 장소: 우리 사무실 10층 회의실 또는 온라인(Zoom)
+- 톤: 정중하지만 간결하게
+- 길이: 150단어 이내`}
+/>
+
+<UseCaseCard
+  emoji="📊"
+  title="데이터 분석 요청"
+  description="월간 매출 데이터를 분석할 때"
+  prompt={`아래 매출 데이터를 분석해줘.
+
+<data>
+{월간 매출 CSV 데이터}
+</data>
+
+분석 결과를 다음 형식으로 정리해줘:
+1. 전월 대비 매출 증감률
+2. 가장 성과가 좋은 상위 3개 제품
+3. 매출 하락이 가장 큰 카테고리와 추정 원인
+4. 다음 달 예상 트렌드 (2-3문장)
+
+표와 숫자 위주로 간결하게 작성해줘.`}
+/>
+
+<UseCaseCard
+  emoji="📝"
+  title="회의록 정리"
+  description="1시간 회의 녹음 스크립트를 정리할 때"
+  prompt={`아래 회의 녹음 스크립트를 다음 형식으로 정리해줘:
+
+## 회의 요약 (3문장 이내)
+## 핵심 결정 사항 (번호 목록)
+## 액션 아이템 (담당자 | 내용 | 기한)
+## 다음 회의 안건
+
+참석자 발언 중 감탄사나 중복은 제거하고,
+실질적인 내용만 남겨줘.`}
+/>
+
+### 명확한 프롬프트의 3단계 레벨
+
+| 레벨 | 특징 | 예시 |
+|------|------|------|
+| **Level 1: 무엇을** | 작업만 명시 | "이메일 써줘" |
+| **Level 2: 무엇을 + 어떻게** | 작업 + 형식/구조 | "사과, 이유, 해결책 포함 3단락 이메일 써줘" |
+| **Level 3: 무엇을 + 어떻게 + 왜** | 작업 + 형식 + 맥락/목적 | "공급망 문제로 2주 지연. 장기 파트너 고객에게 신뢰를 유지하면서, 전문적이지만 공감하는 톤으로 3단락 이메일" |
+
+<Callout emoji="🚀">
+**즉시 적용 가능한 프롬프트 공식**: `[작업 동사] + [대상/내용] + [포함 요소 목록] + [형식/길이] + [톤/스타일]`
+
+예: "작성해줘 + Q3 성과 보고서 + (실적 수치, 목표 달성률, 개선 사항 3가지) + (5단락, 500단어 이내) + (임원진 대상, 간결하고 전문적인 톤)"
+</Callout>
+
+### 더 알아보기
+
+<ResourceLink
+  href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#be-clear-and-direct"
+  type="official"
+  title="Anthropic 공식: Be clear and direct"
+  description="Claude에게 명확하게 지시하는 공식 가이드라인"
+/>
+<ResourceLink
+  href="https://github.com/anthropics/courses/blob/master/prompt_engineering_interactive_tutorial/Anthropic%201P/02_Being_Clear_and_Direct.ipynb"
+  type="cookbook"
+  title="Anthropic Tutorial: Being Clear and Direct"
+  description="Jupyter 노트북으로 직접 실습하는 명확한 프롬프팅"
+/>
+<ResourceLink
+  href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/prompt-engineering"
+  type="article"
+  title="Microsoft: Prompt Engineering Techniques"
+  description="뉴스레터, 회의록, 고객 응대 등 비즈니스 시나리오별 Before/After 비교"
+/>
+<ResourceLink
+  href="https://www.atlassian.com/blog/enterprise/prompt-engineering"
+  type="article"
+  title="Atlassian: Enterprise Prompt Engineering Guide"
+  description="Jira/Confluence 팀이 쓴 기업 팀을 위한 프롬프트 엔지니어링 가이드"
+/>
+<ResourceLink
+  href="https://docs.anthropic.com/en/prompt-library"
+  type="tool"
+  title="Anthropic Prompt Library"
+  description="실무 프롬프트 템플릿 모음 — 이메일, 분석, 코드 리뷰 등"
+/>
+
+---
+
+## Anthropic 튜토리얼 예시
+
+### 하이쿠에서 서문 제거하기
+
+<Tabs items={['❌ 모호한 지시', '✅ 명확한 지시']}>
+  <Tabs.Tab>
+```
+로봇에 대한 하이쿠를 써줘
+```
+
+Claude는 "네, 로봇에 대한 하이쿠를 써보겠습니다"라는 서문을 붙일 수 있습니다.
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+로봇에 대한 하이쿠를 써줘. 서문은 건너뛰고 바로 시 자체만 출력해.
+```
+
+Claude는 바로 하이쿠만 출력합니다.
+  </Tabs.Tab>
+</Tabs>
+
+### 최고의 농구 선수 — 모호함 제거하기
+
+<Tabs items={['❌ Claude가 망설임', '✅ 단 한 명만']}>
+  <Tabs.Tab>
+```
+역대 최고의 농구 선수는 누구야?
+```
+
+Claude는 "여러 의견이 있습니다..."라며 망설입니다.
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+역대 최고의 농구 선수는 누구야? 의견이 다양하다는 건
+알지만, 반드시 한 명을 골라야 한다면 누구를 선택할 거야?
+```
+
+Claude는 한 명을 명확히 선택합니다.
+  </Tabs.Tab>
+</Tabs>
+
+---
+
+## 연습문제
+
+### 문제 1: 스페인어로 응답하게 하기
+
+<Quiz
+  hint="시스템 프롬프트에서 응답 언어를 명시적으로 지정하세요"
+  answer={<>
+    <p>시스템 프롬프트:</p>
+    <pre><code>{`모든 응답을 스페인어로 작성하세요.\n사용자가 어떤 언어로 질문하든 반드시 스페인어로만 답변하세요.`}</code></pre>
+  </>}
+>
+Claude가 스페인어로만 응답하도록 **시스템 프롬프트**를 작성하세요.
+
+**입력**: "Hello Claude, how are you?"
+**기대 출력**: 스페인어로 된 응답
+</Quiz>
+
+### 문제 2: 정확히 한 명만 답하게 하기
+
+<Quiz
+  hint="출력 형식을 '이름만'으로 제한하고, 부연 설명을 금지하세요"
+  answer={<>
+    <pre><code>{`역대 최고의 농구 선수는 누구야? 반드시 한 명만 골라서\n그 선수의 이름만 출력해. 설명이나 부연은 필요 없어.`}</code></pre>
+  </>}
+>
+"역대 최고의 농구 선수"를 물었을 때, Claude가 **"마이클 조던"이라는 이름만** 출력하도록 프롬프트를 작성하세요. (설명이나 다른 이름 없이)
+</Quiz>
+
+### 문제 3: 800단어 이상의 긴 응답 끌어내기
+
+<Quiz
+  hint="구체적인 단어 수를 명시하고, 포함할 요소(캐릭터, 배경, 대화)를 지정하세요"
+  answer={<>
+    <pre><code>{`시간 여행이 가능한 세상을 배경으로 장편 소설의 첫 번째\n장을 써줘. 최소 800단어 이상으로 작성하고, 캐릭터 묘사,\n배경 설명, 대화를 모두 풍부하게 포함해줘.`}</code></pre>
+  </>}
+>
+Claude가 **800단어 이상**의 긴 이야기를 쓰도록 프롬프트를 작성하세요.
+</Quiz>
+
+<Callout emoji="📖">
+이 예시와 연습문제는 [Anthropic Tutorial Ch.2: Being Clear and Direct](https://github.com/anthropics/courses/blob/master/prompt_engineering_interactive_tutorial/Anthropic%201P/02_Being_Clear_and_Direct.ipynb)를 참고하여 한국어로 재구성했습니다.
+</Callout>

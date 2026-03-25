@@ -1,0 +1,48 @@
+---
+title: 프롬프트 엔지니어링 개요
+---
+
+import { Callout } from 'nextra/components'
+
+# 프롬프트 엔지니어링
+
+## 프롬프트 엔지니어링 개요
+
+<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview">공식문서에서 보기</OriginalDocLink>
+
+<Callout emoji="📋">
+이 문서는 [Anthropic 프롬프트 엔지니어링 공식문서](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) (2026년 3월 버전)를 교육 목적으로 아카이브한 것입니다. 공식문서는 수시로 업데이트됩니다. 문서의 UI나 모델 버전은 바뀔 수 있지만, **프롬프트 엔지니어링의 핵심 원리와 본질은 동일합니다.**
+</Callout>
+
+<Callout emoji="🎯">
+**이 강의의 대상**: 이 강의는 API 개발자가 아닌, AI를 업무에 활용하고 싶은 **일반 직장인**을 위해 재구성되었습니다. Claude.ai, ChatGPT 등 어떤 AI 도구를 사용하든 적용할 수 있는 프롬프트 작성 원칙을 배웁니다.
+</Callout>
+
+### 프롬프트 엔지니어링 전에
+
+이 가이드는 다음 사항을 갖추고 있다고 가정합니다:
+
+- 사용 사례에 대한 **명확한 성공 기준** 정의
+- 해당 기준에 대해 **경험적으로 테스트**할 수 있는 방법
+- 개선하고자 하는 **첫 번째 프롬프트 초안**
+
+아직 준비되지 않았다면, 먼저 이를 확립하는 데 시간을 투자하기를 강력히 권합니다.
+
+<Callout emoji="💡">
+**프롬프트 생성기**: 첫 번째 프롬프트 초안이 없으신가요? Claude Console의 프롬프트 생성기를 사용해 보세요!
+</Callout>
+
+### 프롬프트 엔지니어링이 필요한 시점
+
+이 가이드는 프롬프트 엔지니어링을 통해 제어할 수 있는 성공 기준에 중점을 둡니다. 모든 성공 기준이나 실패한 평가가 프롬프트 엔지니어링으로 가장 잘 해결되는 것은 아닙니다. 예를 들어, 지연 시간과 비용은 때때로 다른 모델을 선택함으로써 더 쉽게 개선될 수 있습니다.
+
+### 프롬프트 엔지니어링 방법
+
+명확성과 예시부터 XML 구조화, 역할 프롬프팅, 사고, 프롬프트 체이닝까지 — 모든 프롬프팅 기법은 [프롬프팅 모범 사례](/docs/best-practices)에서 다룹니다. 그것이 살아있는 레퍼런스이니, 거기서 시작하세요.
+
+### 프롬프트 엔지니어링 튜토리얼
+
+상호작용하며 학습하는 것을 선호한다면, 대화형 튜토리얼을 활용해 보세요!
+
+- [**GitHub 프롬프팅 튜토리얼**](https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial): 문서에서 다루는 프롬프트 엔지니어링 개념을 예시와 함께 배우는 튜토리얼
+- [**Google Sheets 프롬프팅 튜토리얼**](https://docs.google.com/spreadsheets/d/19jzLgRruG9kjUQNKtCg1ZjdD6l6weA6qRXG5zLIAhC8): 대화형 스프레드시트를 통한 가벼운 버전의 프롬프트 엔지니어링 튜토리얼

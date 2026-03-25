@@ -1,0 +1,465 @@
+/* ============================================
+   Notion-style Theme for Nextra
+   ============================================ */
+
+/* --- Quiz component --- */
+.quiz-block {
+  margin: 1.5em 0;
+  padding: 20px;
+  background: var(--notion-bg-secondary, #f7f6f3);
+  border-radius: 6px;
+  border: 1px solid var(--notion-border, #e9e9e7);
+}
+
+.quiz-question {
+  margin-bottom: 12px;
+}
+
+.quiz-question p {
+  margin: 0.3em 0 !important;
+}
+
+.quiz-hint {
+  font-size: 0.875em;
+  color: var(--notion-text-light, #787774);
+  margin: 8px 0 12px !important;
+}
+
+.quiz-input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--notion-border, #e9e9e7);
+  border-radius: 4px;
+  background: var(--notion-bg, #ffffff);
+  color: var(--notion-text, #37352f);
+  font-family: 'SFMono-Regular', Menlo, monospace;
+  font-size: 0.875em;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.quiz-input:focus {
+  border-color: #2383e2;
+}
+
+.quiz-input::placeholder {
+  color: var(--notion-text-light, #787774);
+  opacity: 0.6;
+}
+
+.quiz-submit {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 6px 16px;
+  font-size: 0.85em;
+  font-weight: 500;
+  color: #fff;
+  background: #2383e2;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.quiz-submit:hover:not(:disabled) {
+  background: #1b6ec2;
+}
+
+.quiz-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quiz-answer {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--notion-bg, #ffffff);
+  border: 1px solid #2dd4a8;
+  border-radius: 6px;
+}
+
+.quiz-answer-label {
+  font-weight: 600;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  color: #0d9668;
+}
+
+.quiz-answer-content {
+  font-size: 0.9em;
+  line-height: 1.7;
+}
+
+.quiz-answer-content pre {
+  margin: 8px 0 !important;
+}
+
+.quiz-compare-note {
+  margin-top: 12px !important;
+  font-size: 0.8em;
+  color: var(--notion-text-light, #787774);
+  font-style: italic;
+}
+
+/* --- Use case card & resource link --- */
+.usecase-card {
+  margin: 12px 0;
+  padding: 16px;
+  background: var(--notion-bg, #ffffff);
+  border: 1px solid var(--notion-border, #e9e9e7);
+  border-radius: 6px;
+}
+
+.usecase-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.usecase-emoji {
+  font-size: 1.2em;
+}
+
+.usecase-title {
+  font-size: 0.95em;
+}
+
+.usecase-desc {
+  font-size: 0.875em;
+  color: var(--notion-text-light, #787774);
+  margin: 4px 0 10px !important;
+}
+
+.usecase-prompt {
+  font-size: 0.8em !important;
+  margin: 8px 0 0 !important;
+}
+
+.resource-link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  margin: 6px 0;
+  border: 1px solid var(--notion-border, #e9e9e7);
+  border-radius: 4px;
+  text-decoration: none !important;
+  color: var(--notion-text, #37352f) !important;
+  transition: background 0.15s;
+}
+
+.resource-link:hover {
+  background: var(--notion-bg-secondary, #f7f6f3);
+}
+
+.resource-type {
+  font-size: 0.7em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--notion-text-light, #787774);
+}
+
+.resource-title {
+  font-size: 0.875em;
+  font-weight: 500;
+}
+
+.resource-desc {
+  font-size: 0.8em;
+  color: var(--notion-text-light, #787774);
+}
+
+/* --- Original doc link component --- */
+.original-doc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8em;
+  color: var(--notion-text-light, #787774);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--notion-border, #e9e9e7);
+  margin-bottom: 1.5em;
+  transition: background 0.15s;
+}
+
+.original-doc-link:hover {
+  background: var(--notion-callout-bg, #f1f1ef);
+  color: var(--notion-text, #37352f);
+}
+
+/* --- Base: Notion-like color palette --- */
+:root {
+  --nextra-primary-hue: 0;
+  --nextra-primary-saturation: 0%;
+
+  --notion-text: #37352f;
+  --notion-text-light: #787774;
+  --notion-bg: #ffffff;
+  --notion-bg-secondary: #f7f6f3;
+  --notion-border: #e9e9e7;
+  --notion-border-light: #f1f1ef;
+  --notion-callout-bg: #f1f1ef;
+  --notion-callout-text: #37352f;
+  --notion-code-text: #eb5757;
+  --notion-code-bg: rgba(135, 131, 120, 0.15);
+  --notion-code-block-bg: #f7f6f3;
+}
+
+:is(html[class~="dark"]) {
+  --notion-text: #ffffffcf;
+  --notion-text-light: #ffffff80;
+  --notion-bg: #191919;
+  --notion-bg-secondary: #252525;
+  --notion-border: #373737;
+  --notion-border-light: #2d2d2d;
+  --notion-callout-bg: #2f2f2f;
+  --notion-callout-text: #ffffffcf;
+  --notion-code-text: #ff7b72;
+  --notion-code-bg: rgba(135, 131, 120, 0.15);
+  --notion-code-block-bg: #252525;
+}
+
+/* --- Typography: Notion spacing & weight --- */
+article {
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  line-height: 1.7;
+  letter-spacing: -0.003em;
+  color: var(--notion-text);
+}
+
+article h1 {
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+  margin-top: 1.5em !important;
+  margin-bottom: 0.25em !important;
+}
+
+/* Notion h2: no underline, just more top margin */
+article h2 {
+  font-weight: 600 !important;
+  letter-spacing: -0.01em;
+  margin-top: 1.8em !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+article h3 {
+  font-weight: 600 !important;
+  margin-top: 1.4em !important;
+}
+
+/* --- Callout: Notion-style (ALL same muted gray, no color variants) --- */
+.nextra-callout {
+  background: var(--notion-callout-bg) !important;
+  color: var(--notion-callout-text) !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 16px 16px 16px 12px !important;
+  font-size: 0.938em !important;
+  line-height: 1.65 !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+/* Hide Nextra default SVG icons completely */
+.nextra-callout > :first-child svg {
+  display: none !important;
+}
+
+/* Emoji styling: Notion shows emoji at ~1.1em, vertically centered with first line */
+.nextra-callout > :first-child {
+  font-size: 1.15em !important;
+  line-height: 1.5 !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Callout body text */
+.nextra-callout > :last-child {
+  min-width: 0 !important;
+}
+
+.nextra-callout p {
+  margin: 0 !important;
+}
+
+/* --- Inline code: Notion-style (red text, subtle bg) --- */
+article :not(pre) > code {
+  background: var(--notion-code-bg) !important;
+  color: var(--notion-code-text) !important;
+  border: none !important;
+  border-radius: 3px !important;
+  padding: 0.2em 0.4em !important;
+  font-size: 85% !important;
+  font-weight: 400 !important;
+}
+
+/* --- Code blocks: Notion-style (very subtle bg, thin border) --- */
+article pre {
+  background: var(--notion-code-block-bg) !important;
+  border: 1px solid var(--notion-border) !important;
+  border-radius: 4px !important;
+  font-size: 0.85em !important;
+  padding: 1em !important;
+}
+
+/* --- Tables: Notion-style clean lines --- */
+article table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  font-size: 0.925em !important;
+  border: 1px solid var(--notion-border) !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+}
+
+article thead {
+  background: var(--notion-bg-secondary) !important;
+}
+
+article th {
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 8px 12px !important;
+  border-bottom: 1px solid var(--notion-border) !important;
+  color: var(--notion-text-light) !important;
+  font-size: 0.875em !important;
+}
+
+article td {
+  padding: 8px 12px !important;
+  border-bottom: 1px solid var(--notion-border-light) !important;
+}
+
+article tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* --- Blockquote: Notion-style thin border --- */
+article blockquote {
+  border-left: 3px solid var(--notion-border) !important;
+  color: var(--notion-text) !important;
+  font-style: normal !important;
+  padding-left: 14px !important;
+  margin-left: 2px !important;
+}
+
+/* --- Tabs: cleaner, Notion-like --- */
+[role="tablist"] {
+  border-bottom: 1px solid var(--notion-border) !important;
+  gap: 0 !important;
+}
+
+[role="tab"] {
+  font-size: 0.875em !important;
+  padding: 6px 12px !important;
+  border-bottom: 2px solid transparent !important;
+  color: var(--notion-text-light) !important;
+}
+
+[role="tab"][aria-selected="true"] {
+  font-weight: 600 !important;
+  color: var(--notion-text) !important;
+  border-bottom-color: var(--notion-text) !important;
+}
+
+/* --- HR: Notion-style faint line --- */
+article hr {
+  border: none !important;
+  border-top: 1px solid var(--notion-border-light) !important;
+  margin: 2em 0 !important;
+}
+
+/* --- Lists: Notion-like spacing --- */
+article ul, article ol {
+  padding-left: 1.5em !important;
+}
+
+article li {
+  margin: 0.15em 0 !important;
+}
+
+article li::marker {
+  color: var(--notion-text-light) !important;
+}
+
+/* --- Sidebar: cleaner Notion feel --- */
+aside nav a,
+aside nav button {
+  border-radius: 4px !important;
+  font-size: 0.875em !important;
+}
+
+/* Active sidebar item: Notion uses subtle bg + bold */
+aside nav a[aria-current="page"] {
+  font-weight: 600 !important;
+}
+
+/* --- Navbar: Notion-like simplicity --- */
+nav[class*="nextra"] {
+  border-bottom-color: var(--notion-border) !important;
+}
+
+/* --- Footer: more subtle --- */
+footer {
+  border-top-color: var(--notion-border-light) !important;
+}
+
+/* --- Breadcrumbs: Notion style --- */
+[class*="breadcrumb"] {
+  font-size: 0.8em !important;
+  color: var(--notion-text-light) !important;
+}
+
+/* --- Heading anchor (#) links: hide unless hovered --- */
+article h2 a[href^="#"],
+article h3 a[href^="#"] {
+  opacity: 0 !important;
+  transition: opacity 0.15s !important;
+}
+
+article h2:hover a[href^="#"],
+article h3:hover a[href^="#"] {
+  opacity: 0.4 !important;
+}
+
+/* --- Page bottom nav (prev/next): cleaner --- */
+article + div + div {
+  border-top: 1px solid var(--notion-border-light) !important;
+}
+
+/* --- "Copy page" button: less prominent --- */
+button:has(> img + span) {
+  opacity: 0.5 !important;
+}
+button:has(> img + span):hover {
+  opacity: 1 !important;
+}
+
+/* --- TOC (table of contents): Notion style --- */
+nav[aria-label="table of contents"] p {
+  font-size: 0.75em !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--notion-text-light) !important;
+  font-weight: 600 !important;
+}
+
+nav[aria-label="table of contents"] a {
+  font-size: 0.8em !important;
+  color: var(--notion-text-light) !important;
+}
+
+nav[aria-label="table of contents"] a:hover {
+  color: var(--notion-text) !important;
+}
