@@ -140,6 +140,10 @@
   margin: 8px 0 0 !important;
 }
 
+.resource-link:first-of-type {
+  margin-top: 16px;
+}
+
 .resource-link {
   display: flex;
   flex-direction: column;
@@ -630,4 +634,87 @@ nav[aria-label="table of contents"] a:hover {
 .dark .presenter-hint {
   background: rgba(255,255,255,0.06);
   color: #666;
+}
+
+/* ============================================
+   Slide/Doc Visibility Controls
+   ============================================ */
+
+/* SlideOnly: hidden in normal doc mode, shown in slide mode */
+.slide-only {
+  display: none;
+}
+
+.slide-frame .slide-only {
+  display: block;
+}
+
+/* DocOnly: shown in normal doc mode, hidden in slide mode */
+.slide-frame .doc-only {
+  display: none;
+}
+
+/* SlideOnly keyword card styling */
+.slide-only .keyword-card {
+  background: var(--notion-bg-hover, #f7f6f3);
+  border: 1px solid var(--notion-border, #e9e9e7);
+  border-radius: 8px;
+  padding: 32px 40px;
+  margin: 24px 0;
+  text-align: center;
+}
+
+.dark .slide-only .keyword-card {
+  background: #2c2c2c;
+  border-color: #444;
+}
+
+.slide-only .keyword-card h3 {
+  font-size: 1.6em !important;
+  margin: 0 0 16px 0 !important;
+  color: var(--notion-text, #37352f);
+}
+
+.slide-only .keyword-card p {
+  font-size: 1.3em !important;
+  margin: 8px 0 !important;
+  color: var(--notion-text-light, #787774);
+  line-height: 1.6 !important;
+}
+
+.slide-only .keyword-card .keyword-highlight {
+  font-size: 2em !important;
+  font-weight: 700;
+  color: var(--notion-text, #37352f);
+  margin: 16px 0 !important;
+  display: block;
+}
+
+.dark .slide-only .keyword-card h3 {
+  color: #e0e0e0;
+}
+
+.dark .slide-only .keyword-card p {
+  color: #999;
+}
+
+.dark .slide-only .keyword-card .keyword-highlight {
+  color: #fff;
+}
+
+/* SlideOnly step list styling */
+.slide-only .step-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+
+.slide-only .step-list li {
+  font-size: 1.4em !important;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--notion-border, #e9e9e7);
+}
+
+.slide-only .step-list li:last-child {
+  border-bottom: none;
 }
