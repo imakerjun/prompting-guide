@@ -650,55 +650,192 @@ nav[aria-label="table of contents"] a:hover {
   display: none;
 }
 
-/* SlideOnly keyword card styling */
-.slide-only .keyword-card {
-  background: var(--notion-bg-hover, #f7f6f3);
-  border: 1px solid var(--notion-border, #e9e9e7);
-  border-radius: 8px;
-  padding: 32px 40px;
-  margin: 24px 0;
-  text-align: center;
+/* ============================================
+   Slide Accent Color
+   ============================================ */
+:root {
+  --slide-accent: #d97706;
+  --slide-accent-soft: rgba(217, 119, 6, 0.1);
+  --slide-accent-border: rgba(217, 119, 6, 0.3);
 }
 
-.dark .slide-only .keyword-card {
+.dark {
+  --slide-accent: #f59e0b;
+  --slide-accent-soft: rgba(245, 158, 11, 0.1);
+  --slide-accent-border: rgba(245, 158, 11, 0.3);
+}
+
+/* ============================================
+   SlideOnly Keyword Cards — Base
+   ============================================ */
+.slide-only .keyword-card {
+  border-radius: 12px;
+  margin: 24px 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+/* ============================================
+   Hero Card — 핵심 한 문장이 화면을 지배
+   ============================================ */
+.slide-only .keyword-card.hero {
+  background: var(--slide-accent-soft);
+  border: 1px solid var(--slide-accent-border);
+  padding: 60px 80px;
+}
+
+.slide-only .keyword-card.hero .keyword-highlight {
+  font-size: 3.5em !important;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--slide-accent);
+  margin: 0 0 16px 0 !important;
+  display: block;
+  line-height: 1.2 !important;
+}
+
+.slide-only .keyword-card.hero h3 {
+  font-size: 1.2em !important;
+  font-weight: 400;
+  margin: 0 0 20px 0 !important;
+  color: var(--notion-text-light, #787774);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.slide-only .keyword-card.hero p {
+  font-size: 1.1em !important;
+  margin: 4px 0 !important;
+  color: var(--notion-text-light, #787774);
+  line-height: 1.5 !important;
+  opacity: 0.7;
+}
+
+/* ============================================
+   Metric Card — 숫자가 극적으로 강조
+   ============================================ */
+.slide-only .keyword-card.metric {
+  background: var(--notion-bg-hover, #f7f6f3);
+  border: 1px solid var(--notion-border, #e9e9e7);
+  padding: 48px 60px;
+}
+
+.dark .slide-only .keyword-card.metric {
   background: #2c2c2c;
   border-color: #444;
 }
 
-.slide-only .keyword-card h3 {
-  font-size: 1.6em !important;
-  margin: 0 0 16px 0 !important;
-  color: var(--notion-text, #37352f);
-}
-
-.slide-only .keyword-card p {
-  font-size: 1.3em !important;
-  margin: 8px 0 !important;
-  color: var(--notion-text-light, #787774);
-  line-height: 1.6 !important;
-}
-
-.slide-only .keyword-card .keyword-highlight {
-  font-size: 2em !important;
-  font-weight: 700;
-  color: var(--notion-text, #37352f);
-  margin: 16px 0 !important;
+.slide-only .keyword-card.metric .keyword-highlight {
+  font-size: 4em !important;
+  font-weight: 800;
+  color: var(--slide-accent);
+  margin: 0 0 12px 0 !important;
   display: block;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
-.dark .slide-only .keyword-card h3 {
+.slide-only .keyword-card.metric p {
+  font-size: 1em !important;
+  margin: 4px 0 !important;
+  color: var(--notion-text-light, #787774);
+  line-height: 1.5 !important;
+}
+
+/* ============================================
+   Principle Card — 번호 + 키워드 + 설명
+   ============================================ */
+.slide-only .keyword-card.principle {
+  background: transparent;
+  border: none;
+  padding: 40px 60px;
+  text-align: left;
+  flex-direction: row;
+  gap: 28px;
+  min-height: auto;
+}
+
+.slide-only .keyword-card.principle .principle-number {
+  font-size: 3em !important;
+  font-weight: 800;
+  color: var(--slide-accent);
+  line-height: 1 !important;
+  flex-shrink: 0;
+}
+
+.slide-only .keyword-card.principle .principle-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.slide-only .keyword-card.principle h3 {
+  font-size: 1.6em !important;
+  font-weight: 700;
+  margin: 0 0 8px 0 !important;
+  color: var(--notion-text, #37352f);
+}
+
+.slide-only .keyword-card.principle p {
+  font-size: 1.1em !important;
+  margin: 0 !important;
+  color: var(--notion-text-light, #787774);
+  line-height: 1.5 !important;
+}
+
+.dark .slide-only .keyword-card.principle h3 {
   color: #e0e0e0;
 }
 
-.dark .slide-only .keyword-card p {
-  color: #999;
+/* ============================================
+   Summary Card — 마무리 정리 (번호 목록)
+   ============================================ */
+.slide-only .keyword-card.summary {
+  background: var(--notion-bg-hover, #f7f6f3);
+  border: 1px solid var(--notion-border, #e9e9e7);
+  padding: 48px 60px;
+  text-align: left;
 }
 
-.dark .slide-only .keyword-card .keyword-highlight {
-  color: #fff;
+.dark .slide-only .keyword-card.summary {
+  background: #2c2c2c;
+  border-color: #444;
 }
 
-/* SlideOnly step list styling */
+.slide-only .keyword-card.summary h3 {
+  font-size: 1.4em !important;
+  font-weight: 400;
+  margin: 0 0 24px 0 !important;
+  color: var(--notion-text-light, #787774);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.slide-only .keyword-card.summary p {
+  font-size: 1.3em !important;
+  margin: 0 !important;
+  padding: 14px 0;
+  color: var(--notion-text, #37352f);
+  line-height: 1.5 !important;
+  border-bottom: 1px solid var(--notion-border, #e9e9e7);
+}
+
+.slide-only .keyword-card.summary p:last-child {
+  border-bottom: none;
+}
+
+.dark .slide-only .keyword-card.summary p {
+  color: #e0e0e0;
+  border-bottom-color: #444;
+}
+
+/* Step list (legacy, kept for compatibility) */
 .slide-only .step-list {
   list-style: none;
   padding: 0;
@@ -713,4 +850,204 @@ nav[aria-label="table of contents"] a:hover {
 
 .slide-only .step-list li:last-child {
   border-bottom: none;
+}
+
+/* ============================================
+   Learning Path Component
+   ============================================ */
+.lp-container {
+  max-width: 520px;
+  margin: 24px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* --- Step group card --- */
+.lp-step {
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid;
+}
+
+.lp-step--blue {
+  background: #f5f8ff;
+  border-color: #c8d6ec;
+}
+.lp-step--amber {
+  background: #fffaf2;
+  border-color: #e8d5b0;
+}
+.lp-step--green {
+  background: #f3faf6;
+  border-color: #b8d9c4;
+}
+
+:is(html[class~="dark"]) .lp-step--blue {
+  background: #1a2236;
+  border-color: #2d3f5e;
+}
+:is(html[class~="dark"]) .lp-step--amber {
+  background: #2a2112;
+  border-color: #4d3a1a;
+}
+:is(html[class~="dark"]) .lp-step--green {
+  background: #152420;
+  border-color: #264a36;
+}
+
+/* --- Step header: badge + title --- */
+.lp-step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.lp-step-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.7;
+}
+
+.lp-step-badge--blue { background: #4a6fa5; }
+.lp-step-badge--amber { background: #b87a14; }
+.lp-step-badge--green { background: #2d7d46; }
+
+.lp-step-title {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--notion-text-light, #787774);
+}
+
+/* --- Node list --- */
+.lp-nodes {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+/* --- Individual node --- */
+.lp-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.lp-node:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.lp-node--blue { background: #e3ebf5; }
+.lp-node--amber { background: #f5ead5; }
+.lp-node--green { background: #d8eddf; }
+
+:is(html[class~="dark"]) .lp-node--blue { background: #243050; }
+:is(html[class~="dark"]) .lp-node--amber { background: #3a2e18; }
+:is(html[class~="dark"]) .lp-node--green { background: #1e3a28; }
+
+:is(html[class~="dark"]) .lp-node:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.lp-node-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 0.75em;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.lp-node--blue .lp-node-num { background: #4a6fa5; }
+.lp-node--amber .lp-node-num { background: #b87a14; }
+.lp-node--green .lp-node-num { background: #2d7d46; }
+
+.lp-node-title {
+  flex: 1;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--notion-text, #37352f);
+}
+
+.lp-node-tag {
+  font-size: 0.75em;
+  font-weight: 500;
+  color: var(--notion-text-light, #787774);
+  font-style: italic;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.04);
+  white-space: nowrap;
+}
+
+:is(html[class~="dark"]) .lp-node-tag {
+  background: rgba(255,255,255,0.06);
+}
+
+.lp-node-tag--accent {
+  font-style: normal;
+  font-weight: 600;
+  color: #2d7d46;
+  background: rgba(45,125,70,0.1);
+}
+
+:is(html[class~="dark"]) .lp-node-tag--accent {
+  color: #5cb87a;
+  background: rgba(92,184,122,0.12);
+}
+
+.lp-node--final {
+  position: relative;
+  border: 1px dashed #2d7d46;
+}
+
+:is(html[class~="dark"]) .lp-node--final {
+  border-color: #5cb87a;
+}
+
+/* --- Connector (vertical line between nodes within a step) --- */
+.lp-connector {
+  width: 2px;
+  height: 12px;
+  margin: 0 auto;
+  border-radius: 1px;
+}
+
+.lp-connector--blue { background: #a3b8d8; }
+.lp-connector--amber { background: #d4b578; }
+.lp-connector--green { background: #8fc4a0; }
+
+:is(html[class~="dark"]) .lp-connector--blue { background: #3b5478; }
+:is(html[class~="dark"]) .lp-connector--amber { background: #6b5530; }
+:is(html[class~="dark"]) .lp-connector--green { background: #3a6b4a; }
+
+/* --- Bridge (vertical connector between step groups) --- */
+.lp-bridge {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.lp-bridge-line {
+  width: 2px;
+  height: 20px;
+  background: var(--notion-border, #e9e9e7);
+  border-radius: 1px;
 }
