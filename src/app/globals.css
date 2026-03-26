@@ -140,16 +140,12 @@
   margin: 8px 0 0 !important;
 }
 
-.resource-link:first-of-type {
-  margin-top: 16px;
-}
-
 .resource-link {
   display: flex;
   flex-direction: column;
   gap: 2px;
   padding: 10px 14px;
-  margin: 6px 0;
+  margin: 10px 0;
   border: 1px solid var(--notion-border, #e9e9e7);
   border-radius: 4px;
   text-decoration: none !important;
