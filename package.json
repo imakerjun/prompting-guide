@@ -5,10 +5,10 @@
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('.next', { recursive: true, force: true })\"",
     "dev": "next",
-    "build": "npm run clean && node ../scripts/check-slide-templates.mjs && next build && pagefind --site .next/server/app --output-path public/_pagefind",
+    "build": "npm run clean && node scripts/check-slide-templates.mjs && next build && pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
-    "check:notes-sync": "node ../scripts/check-slide-notes-sync.js --all",
-    "check:slide-templates": "node ../scripts/check-slide-templates.mjs"
+    "check:notes-sync": "node scripts/check-slide-notes-sync.js --all",
+    "check:slide-templates": "node scripts/check-slide-templates.mjs"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.3",
