@@ -34,39 +34,70 @@ function extractSlidesFromDOM() {
     document.querySelector('article main') ||
     document.querySelector('article') ||
     document.querySelector('main')
-  if (!container) return []
+  if (!container) return { groups: [], sections: [], allSections: [] }
+
+  const cleanHeading = (text) =>
+    text.replace(/Permalink.*$/, '').replace(/#$/, '').trim()
 
   const elements = Array.from(container.children)
-  const groups = [[]]
+  const groups = []
+  const sectionNames = []
+  const allSections = new Set(['']) // intro section (before first h2)
+  let currentGroup = []
+  let activeSection = ''
+
+  const flushGroup = () => {
+    if (currentGroup.length === 0) return
+    groups.push(currentGroup)
+    sectionNames.push(activeSection)
+    currentGroup = []
+  }
 
   for (const el of elements) {
     const tag = el.tagName
-    // Split on H2 or HR — these always start a new slide
-    if (tag === 'H2' || tag === 'HR') {
-      if (tag === 'H2') {
-        groups.push([el])
-      } else {
-        groups.push([])
-      }
+    const docOnlyHeading =
+      el.classList?.contains('doc-only') ? el.querySelector('h2') : null
+    const sectionHeading = tag === 'H2' ? el : docOnlyHeading
+
+    // Section headings define the current header label,
+    // but they should not become slides by themselves.
+    if (sectionHeading) {
+      flushGroup()
+      activeSection = cleanHeading(sectionHeading.textContent)
+      allSections.add(activeSection)
+      continue
     }
+
+    if (tag === 'HR') {
+      flushGroup()
+      continue
+    }
+
     // Split on UseCase cards — each card gets its own slide
-    // But keep the first card with any preceding intro text (h2 + p)
-    else if (el.classList?.contains('usecase-card')) {
-      const currentGroup = groups[groups.length - 1]
-      // If group already has a usecase-card, start a new slide for this one
+    if (el.classList?.contains('usecase-card')) {
       const hasCard = currentGroup.some(e => e.classList?.contains('usecase-card'))
-      if (hasCard) {
-        groups.push([el])
-      } else {
-        currentGroup.push(el)
-      }
-    } else {
-      groups[groups.length - 1].push(el)
+      if (hasCard) flushGroup()
+      currentGroup.push(el)
+      continue
     }
+
+    currentGroup.push(el)
   }
 
-  return groups.filter(g => g.length > 0)
+  flushGroup()
+
+  return { groups, sections: sectionNames, allSections: [...allSections] }
 }
+
+// Highlight color presets
+const HIGHLIGHT_COLORS = [
+  { key: '0', name: 'Off', color: null },
+  { key: '1', name: 'Yellow', color: 'rgba(250, 204, 21, 0.4)' },
+  { key: '2', name: 'Red', color: 'rgba(239, 68, 68, 0.35)' },
+  { key: '3', name: 'Green', color: 'rgba(34, 197, 94, 0.3)' },
+  { key: '4', name: 'Blue', color: 'rgba(59, 130, 246, 0.3)' },
+  { key: '5', name: 'Purple', color: 'rgba(168, 85, 247, 0.3)' },
+]
 
 export function PresenterMode() {
   const [isSlideMode, setIsSlideMode] = useState(false)
@@ -75,6 +106,9 @@ export function PresenterMode() {
   const [chromeHidden, setChromeHidden] = useState(false)
   const [isDark, setIsDark] = useState(false)
   const [slides, setSlides] = useState([])
+  const [slideSections, setSlideSections] = useState([])
+  const [allSections, setAllSections] = useState([])
+  const [highlightIdx, setHighlightIdx] = useState(0)
   const slideRef = useRef(null)
   const notesWindowRef = useRef(null)
   const bcRef = useRef(null)
@@ -88,6 +122,34 @@ export function PresenterMode() {
     setIsDark(document.documentElement.classList.contains('dark'))
   }, [])
 
+  // Auto-enter slide mode if ?presenter=true in URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('presenter') === 'true') {
+      // Immediately hide Nextra chrome while loading
+      if (params.get('hideChrome') === 'true') {
+        document.documentElement.style.setProperty('--nextra-chrome-display', 'none')
+        const style = document.createElement('style')
+        style.textContent = 'nav, aside, header, footer, [class*="nextra"] > nav, [class*="nextra"] > aside { display: none !important; } article { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }'
+        document.head.appendChild(style)
+      }
+      const h = getSlideFromHash()
+      const timer = setTimeout(() => {
+        const { groups, sections, allSections: secs } = extractSlidesFromDOM()
+        if (groups.length === 0) return
+        const cloned = groups.map(group => group.map(el => el.cloneNode(true)))
+        setSlides(cloned)
+        setSlideSections(sections)
+        setAllSections(secs)
+        setSlideCount(cloned.length)
+        setCurrentSlide(Math.min(h ? h - 1 : 0, cloned.length - 1))
+        setIsSlideMode(true)
+        setHighlightIdx(0)
+      }, 300)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
   useEffect(() => {
     if (!isSlideMode) return
     const html = document.documentElement
@@ -95,22 +157,36 @@ export function PresenterMode() {
     else html.classList.remove('dark')
   }, [isDark, isSlideMode])
 
+  // Apply highlight color as CSS variable
+  useEffect(() => {
+    if (!isSlideMode) return
+    const color = HIGHLIGHT_COLORS[highlightIdx].color
+    const overlay = document.querySelector('.slide-overlay')
+    if (overlay && color) {
+      overlay.style.setProperty('--highlight-color', color)
+    }
+  }, [highlightIdx, isSlideMode])
+
   const enterSlideMode = useCallback((startSlide = 0) => {
-    const groups = extractSlidesFromDOM()
+    const { groups, sections, allSections: secs } = extractSlidesFromDOM()
     if (groups.length === 0) return
     const cloned = groups.map(group =>
       group.map(el => el.cloneNode(true))
     )
     setSlides(cloned)
+    setSlideSections(sections)
+    setAllSections(secs)
     setSlideCount(cloned.length)
     setCurrentSlide(Math.min(startSlide, cloned.length - 1))
     setIsSlideMode(true)
+    setHighlightIdx(0)
   }, [])
 
   const exitSlideMode = useCallback(() => {
     setIsSlideMode(false)
     setChromeHidden(false)
     setSlides([])
+    setHighlightIdx(0)
     history.replaceState(null, '', window.location.pathname)
   }, [])
 
@@ -182,6 +258,43 @@ export function PresenterMode() {
     for (const el of slides[currentSlide]) {
       frame.appendChild(el.cloneNode(true))
     }
+    // Reset Nextra/Tailwind centering — but preserve intentional inline styles
+    frame.querySelectorAll('p, ul, ol, blockquote, table').forEach(el => {
+      // Only reset if element doesn't have explicit inline maxWidth from JSX
+      const hasInlineMaxWidth = el.getAttribute('style')?.includes('max-width')
+      if (!hasInlineMaxWidth) {
+        el.style.maxWidth = 'none'
+      }
+      el.style.marginLeft = '0'
+      el.style.marginRight = '0'
+    })
+    // Auto-fit text: if slide content is short text, scale up to fill the slide
+    const autoFitText = () => {
+      const frameHeight = frame.clientHeight
+      const contentHeight = frame.scrollHeight
+      // Only auto-fit if content is much shorter than frame (text-only slides)
+      if (contentHeight > 0 && contentHeight < frameHeight * 0.5) {
+        const hasCard = frame.querySelector('.keyword-card')
+        const hasCode = frame.querySelector('pre, code')
+        const hasTab = frame.querySelector('[role="tablist"]')
+        const hasImg = frame.querySelector('img')
+        const hasTable = frame.querySelector('table')
+        // Only scale text-only slides (no cards, code, tabs, images, tables)
+        if (!hasCard && !hasCode && !hasTab && !hasImg && !hasTable) {
+          const paragraphs = frame.querySelectorAll('p')
+          if (paragraphs.length > 0 && paragraphs.length <= 3) {
+            const scale = Math.min(frameHeight / contentHeight * 0.6, 2.0)
+            paragraphs.forEach(p => {
+              const currentSize = parseFloat(getComputedStyle(p).fontSize) || 16
+              p.style.fontSize = `${currentSize * scale}px`
+              p.style.lineHeight = '1.7'
+            })
+          }
+        }
+      }
+    }
+    // Delay to allow rendering
+    requestAnimationFrame(autoFitText)
     // Re-wire tabs so they are clickable in slide mode
     wireTabsInFrame(frame)
     // Scroll to top when navigating to a new slide
@@ -293,6 +406,11 @@ export function PresenterMode() {
         setTimeout(sendState, 800)
         setTimeout(sendState, 1500)
       }
+      // Highlight color shortcuts: 0-5
+      else if (['0','1','2','3','4','5'].includes(e.key) && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
+        const idx = HIGHLIGHT_COLORS.findIndex(c => c.key === e.key)
+        if (idx >= 0) setHighlightIdx(idx)
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
@@ -311,13 +429,27 @@ export function PresenterMode() {
 
   if (!isSlideMode) return null
 
+  const currentHighlight = HIGHLIGHT_COLORS[highlightIdx]
+
   return (
-    <div className={`slide-overlay${chromeHidden ? ' slide-chrome-hidden' : ''}`}>
+    <div className={`slide-overlay${chromeHidden ? ' slide-chrome-hidden' : ''}${currentHighlight.color ? ' slide-highlight-active' : ''}`}>
       <div className="slide-controls">
         <span className="slide-counter">
           {currentSlide + 1} / {slideCount}
         </span>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {/* Highlight color indicator */}
+          <div className="slide-highlight-picker">
+            {HIGHLIGHT_COLORS.map((c, i) => (
+              <button
+                key={c.key}
+                onClick={() => setHighlightIdx(i)}
+                className={`slide-highlight-dot${i === highlightIdx ? ' active' : ''}`}
+                style={{ background: c.color || 'transparent', border: c.color ? 'none' : '1px solid #666' }}
+                title={`${c.key}: ${c.name}`}
+              />
+            ))}
+          </div>
           <button onClick={() => setIsDark(p => !p)} className="slide-exit-btn" title="D">
             {isDark ? '☀ Light' : '● Dark'}
           </button>
@@ -327,6 +459,74 @@ export function PresenterMode() {
           <button onClick={exitSlideMode} className="slide-exit-btn">ESC</button>
         </div>
       </div>
+      {/* Section progress bar */}
+      {allSections.length > 0 && (() => {
+        // Shorten section names for display and deduplicate
+        const shortenName = (name) => {
+          if (!name) return '도입'
+          // Remove common suffixes and shorten
+          return name
+            .replace(/\s*—\s*.+$/, '') // "CEO 이메일 — 데이터와..." → "CEO 이메일"
+            .replace(/^문제\s*\d+.*$/, '') // Remove standalone "문제 N" entries
+            .replace(/Permalink.*$/, '')
+            .trim()
+        }
+        // Filter out empty names (from "문제 2" being merged into "연습문제")
+        const displaySections = allSections
+          .map(shortenName)
+          .filter(Boolean)
+          .filter((v, i, a) => a.indexOf(v) === i) // deduplicate
+        const currentSec = shortenName(slideSections[currentSlide] || '')
+
+        return (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0',
+            padding: '0',
+            flexShrink: 0,
+            fontSize: '11px',
+            borderBottom: '1px solid var(--notion-border, #e9e9e7)',
+            background: isDark ? '#1a1a1a' : '#f8f7f4',
+            overflow: 'hidden',
+            width: 'calc((100vh - 90px) * 16 / 9)',
+            maxWidth: '100vw',
+            boxSizing: 'border-box',
+          }}>
+            {displaySections.map((sec, i) => {
+              const isActive = sec === currentSec
+              const sectionIdx = displaySections.indexOf(currentSec)
+              const isPast = i < sectionIdx
+              return (
+                <div
+                  key={sec + i}
+                  onClick={() => {
+                    const firstSlideIdx = slideSections.findIndex(s => shortenName(s) === sec)
+                    if (firstSlideIdx !== -1) setCurrentSlide(firstSlideIdx)
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '6px 10px',
+                    textAlign: 'center',
+                    fontSize: isActive ? '12px' : '11px',
+                    fontWeight: isActive ? 800 : 400,
+                    color: isActive ? (isDark ? '#fff' : '#d97706') : isPast ? (isDark ? '#777' : '#999') : (isDark ? '#444' : '#ccc'),
+                    background: isActive ? (isDark ? 'rgba(217,119,6,0.15)' : 'rgba(217,119,6,0.08)') : 'transparent',
+                    borderBottom: isActive ? '3px solid #d97706' : '3px solid transparent',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    transition: 'all 0.2s',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {sec}
+                </div>
+              )
+            })}
+          </div>
+        )
+      })()}
       <div className="slide-frame" ref={slideRef} />
       <div className="slide-nav">
         <button
@@ -337,7 +537,7 @@ export function PresenterMode() {
           ← Prev
         </button>
         <span className="slide-counter" style={{ fontSize: '13px' }}>
-          Shift+P: exit &nbsp; N: notes &nbsp; H: hide UI &nbsp; D: dark
+          Shift+P: exit &nbsp; N: notes &nbsp; H: hide UI &nbsp; D: dark &nbsp; 0-5: highlight
         </span>
         <button
           onClick={() => setCurrentSlide(p => Math.min(p + 1, slideCount - 1))}

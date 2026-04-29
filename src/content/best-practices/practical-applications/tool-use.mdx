@@ -1,0 +1,652 @@
+---
+title: 도구 사용
+---
+
+import { Callout, Tabs } from 'nextra/components'
+
+# 도구 사용
+
+<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#tool-use">공식문서 원문 섹션 — 도구 사용 (AI에게 행동을 명시적으로 지시하는 원칙)</OriginalDocLink>
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>지난 시간 복습</h3>
+<span className="keyword-highlight">"하지 마" 대신 "이렇게 해"</span>
+<p>형식을 제어하는 법을 배웠다면 — 오늘은 결과물을 넘어 행동으로</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>오늘의 여정</h3>
+<p>1. 도입 — 왜 AI는 시켜도 "제안만" 하는가</p>
+<p>2. 가추법 — 공식문서 "때때로"를 해부</p>
+<p>3. 비유 — "봐줘"와 "수정해줘"의 한 글자 차이</p>
+<p>4. 세 표현 — Tabs로 동사의 농도 비교</p>
+<p>5. 두 모드 — 적극적으로 vs 신중하게</p>
+<p>6. 경고 — "반드시!"가 독이 되는 순간</p>
+<p>7. 실무 — 세 장면에서 바로 써먹기</p>
+<p>8. 통찰 — 좋은 프롬프트 = 좋은 지시</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>이런 경험 있으셨죠</h3>
+<span className="keyword-highlight">AI한테 코드 리뷰, 혹은 보고서 검토를</span>
+<p>개발자도 직장인도 공감할 수 있는 장면으로 시작합니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>기대한 건</h3>
+<span className="keyword-highlight">AI가 직접 고쳐서 가져오는 것</span>
+<p>완성된 결과물, 말 그대로 "실행된" 무언가</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그런데 돌아온 건</h3>
+<span className="keyword-highlight">제안만 잔뜩, 실행은 제로</span>
+<p>"이렇게 바꾸면 좋겠습니다" 목록 — 결국 내가 적용해야 하는 반복</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>먼저 오해부터 깹니다</h3>
+<span className="keyword-highlight">AI 탓이 아니에요</span>
+<p>능력이 부족해서 그런 게 아닙니다 — 원인은 우리에게 있습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>진짜 원인</h3>
+<span className="keyword-highlight">우리가 모호하게 물어봤기 때문</span>
+<p>이 한 문장이 오늘 강의 전체의 출발점입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘의 핵심</h3>
+<span className="keyword-highlight">제안하는 AI → 실행하는 AI</span>
+<p>AI를 제안하는 존재에서 실행하는 존재로 바꾸는 법</p>
+</div>
+</SlideOnly>
+
+---
+
+<Callout emoji="💼">
+**직장인 학습 가이드**: 이 챕터는 Claude API의 도구 호출(Function Calling) 기능을 다룹니다. Claude.ai를 사용하는 직장인은 **"제안 vs 실행"의 차이** 부분만 참고하세요. "수정 사항을 제안해줘" 대신 "직접 수정해줘"처럼 **명확하게 행동을 지시하는 원칙**은 모든 AI 도구에 적용됩니다.
+</Callout>
+
+---
+
+## 도구 사용 시 명시적으로 지시하기
+
+Claude의 최신 모델은 정밀한 지시 따르기를 위해 훈련되었으며, 특정 도구를 사용하도록 **명시적으로 지시하면** 더 좋은 결과를 얻을 수 있습니다.
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>"명시적"의 어원</h3>
+<span className="keyword-highlight">explicit = ex(밖으로) + plicare(접다)</span>
+<p>접혀 있던 걸 밖으로 펼쳐라 — 속마음을 꺼내 말하라는 뜻</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그러니까 명시적으로 지시하라는 건</h3>
+<span className="keyword-highlight">속마음을 밖으로 펼쳐라</span>
+<p>속으로 "직접 고쳐줘"를 원하면서 입으로 "제안해줄래?"라고 묻지 말라는 것</p>
+</div>
+</SlideOnly>
+
+---
+
+<DocOnly>
+
+"변경 사항을 제안해줄 수 있나요?"라고 말하면, 변경을 구현하는 것이 의도였더라도 Claude가 **때때로** 제안만 제공할 수 있습니다.
+
+</DocOnly>
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>공식문서 다음 문장</h3>
+<span className="keyword-highlight">"제안해줄 수 있나요?" → 때때로 제안만</span>
+<p>이 문장 안에 오늘 강의의 결정적 단어가 하나 숨어 있습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>핵심 단어를 찾아보세요</h3>
+<span className="keyword-highlight">"때때로"</span>
+<p>항상이 아니라 때때로 — 이 단어가 모든 걸 설명합니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>"때때로"의 의미</h3>
+<span className="keyword-highlight">가끔은 맞고 가끔은 틀리다</span>
+<p>즉 AI가 여러분의 의도를 추측하고 있다는 뜻</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>왜 추측이 생길까</h3>
+<span className="keyword-highlight">"제안해줄 수 있나요?" = 모호한 지시</span>
+<p>원하는 건지, 가능성을 묻는 건지 — AI도 판단이 안 섭니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>실무 비유 — 회사에서라면</h3>
+<span className="keyword-highlight">"이거 좀 봐줘" vs "이거 수정해줘"</span>
+<p>후배한테 이렇게 부탁하면 어떤 차이가 생길까요?</p>
+</div>
+</SlideOnly>
+
+---
+
+<Tabs items={['👀 봐줘', '✏️ 수정해줘']}>
+  <Tabs.Tab>
+**"이거 좀 봐줘"**
+
+결과: 봤습니다. 의견은 옵션.
+눈으로 보고 "봤습니다" — 의견을 말할 수도, 안 할 수도 있습니다.
+  </Tabs.Tab>
+  <Tabs.Tab>
+**"이거 수정해줘"**
+
+결과: 직접 고쳐서 가져오기.
+동사 하나만 바꿨을 뿐인데, 실제 행동이 바뀝니다.
+  </Tabs.Tab>
+</Tabs>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>프레임 선언</h3>
+<span className="keyword-highlight">봐줘 = 제안 / 수정해줘 = 실행</span>
+<p>이 프레임이 오늘 강의 끝까지 유지됩니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">공식</span>
+<div className="principle-body">
+<h3>행동을 원하면 행동 동사를 쓰세요</h3>
+<p>오늘 강의의 첫 번째 핵심 공식 — 이 한 문장을 꼭 기억하세요</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>사람한테 하던 방식 그대로입니다</h3>
+<span className="keyword-highlight">AI든 사람이든, 원하면 명확하게 말해라</span>
+<p>도구 사용 원리의 뿌리는 커뮤니케이션입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+## 예시 — 세 가지 표현 비교
+
+공식문서가 세 가지 표현을 예시로 준비해뒀어요. 하나씩 뜯어봅시다.
+
+<DocOnly>
+
+Claude가 행동을 취하도록 하려면 더 명시적으로 표현하세요:
+
+</DocOnly>
+
+<Tabs items={['❌ 제안만 함', '✅ 변경을 수행함', '✅ 훨씬 더 직접적']}>
+  <Tabs.Tab>
+```
+이 함수를 개선할 변경 사항을 제안해줄 수 있나요?
+```
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+이 함수의 성능을 개선하도록 수정해줘.
+```
+  </Tabs.Tab>
+  <Tabs.Tab>
+```
+인증 흐름에 이 편집 사항을 적용해줘.
+```
+  </Tabs.Tab>
+</Tabs>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>빨간 탭 — "제안해줄 수 있나요?"</h3>
+<span className="keyword-highlight">이건 질문이지 지시가 아닙니다</span>
+<p>AI는 "네, 가능합니다" 하고 제안 목록만 줍니다 — 적용은 우리 몫</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>초록 탭 1 — "수정해줘"</h3>
+<span className="keyword-highlight">명령형 행동 동사</span>
+<p>AI는 "수정하라"라는 지시로 받아들여, 직접 고친 결과물을 줍니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>초록 탭 2 — "적용해줘"</h3>
+<span className="keyword-highlight">행동 + 대상 + 범위</span>
+<p>"적용해줘" + "인증 흐름에" + "이 편집 사항을" — 셋 다 명시</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">패턴</span>
+<div className="principle-body">
+<h3>애매함 → 행동 동사 → 행동 + 대상 + 범위</h3>
+<p>세 탭은 우연한 배열이 아니에요. "구체성"이라는 축 위에서 점점 올라갑니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">실무 공식</span>
+<div className="principle-body">
+<h3>"뭘 · 어디에 · 어떻게" — 세 조각을 같이 말하라</h3>
+<p>동사 하나만 바꾸는 게 아니라, 대상과 범위까지 얹으면 AI의 추측 여지가 사라집니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+## AI의 적극성 조절하기
+
+같은 원칙을 쓰면서도, 상황에 따라 AI의 "적극성"을 다이얼처럼 조절할 수 있습니다.
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>적극성이란</h3>
+<span className="keyword-highlight">알아서 판단하고 행동하는 정도</span>
+<p>너무 적극적이면 안 시켜도 고치고, 너무 소극적이면 시켜도 다시 묻습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>다이얼로 상상해보세요</h3>
+<span className="keyword-highlight">왼쪽 = 신중 / 오른쪽 = 적극</span>
+<p>같은 AI라도 프롬프트 한 줄로 이 다이얼을 옮길 수 있습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+### Claude를 더 적극적으로 만들기
+
+```xml
+<default_to_action>
+기본적으로 제안만 하지 말고 변경 사항을 직접 구현하세요.
+사용자의 의도가 불명확하면, 가장 유용할 것으로 추정되는
+행동을 추론하고 진행하되, 추측 대신 도구를 사용하여
+누락된 세부 사항을 찾으세요.
+</default_to_action>
+```
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>적극 모드 — 한 줄 해석</h3>
+<span className="keyword-highlight">불명확해도 멈추지 마라</span>
+<p>가장 유용할 것 같은 행동을 추론해서 진행해라</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>적극 모드 — 언제 쓸까</h3>
+<span className="keyword-highlight">반복 작업 · 경험 있는 영역</span>
+<p>매번 "이거 해도 될까요?" 물어보는 게 번거로울 때</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>적극 모드 — 한마디로</h3>
+<span className="keyword-highlight">"일단 해. 아니다 싶으면 말할게"</span>
+<p>상사가 믿고 맡기는 경력 사원에게 하는 말의 톤입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+### Claude를 더 신중하게 만들기
+
+```xml
+<do_not_act_before_instructions>
+명확하게 변경하라는 지시가 없는 한 구현이나 파일 변경에
+뛰어들지 마세요. 사용자의 의도가 모호할 때는, 행동을
+취하는 대신 정보 제공, 조사, 권장 사항 제공을 기본으로
+하세요.
+</do_not_act_before_instructions>
+```
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>신중 모드 — 한 줄 해석</h3>
+<span className="keyword-highlight">불명확하면 멈춰라</span>
+<p>행동 대신 정보 제공·조사·권장 사항 제공을 기본으로</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>신중 모드 — 언제 쓸까</h3>
+<span className="keyword-highlight">중요 문서 · 함부로 못 바꿀 코드</span>
+<p>손대기 전에 먼저 확인받아야 안전한 맥락</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>신중 모드 — 한마디로</h3>
+<span className="keyword-highlight">"건드리기 전에 먼저 알려줘"</span>
+<p>팀장이 중요 문서를 맡길 때 하는 말의 톤입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">대비</span>
+<div className="principle-body">
+<h3>적극 모드 vs 신중 모드</h3>
+<p><strong>적극</strong>: "일단 해. 아니다 싶으면 말할게"</p>
+<p><strong>신중</strong>: "건드리기 전에 먼저 알려줘"</p>
+<p>같은 AI를 상황에 맞게 — 그게 이 섹션의 메시지예요</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+## 과다 트리거 경고
+
+<Callout emoji="⚠️">
+Claude Opus 4.5와 4.6은 이전 모델보다 시스템 프롬프트에 **더 민감하게** 반응합니다. 도구의 과소 트리거를 줄이기 위해 설계한 프롬프트가 이제 **과다 트리거**를 유발할 수 있습니다. `"중요: 반드시 이 도구를 사용해야 합니다..."` 대신 `"이 도구를 사용하세요..."` 로 완화하세요.
+</Callout>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>공식문서 경고를 한 문장으로</h3>
+<span className="keyword-highlight">잘 따라서 문제다</span>
+<p>Opus 4.5·4.6은 시스템 프롬프트를 더 잘 따릅니다 — 그게 역설적으로 부작용을 만듭니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>"반드시!"가 독이 됩니다</h3>
+<span className="keyword-highlight">강조가 과도한 실행을 만든다</span>
+<p>예전엔 꼭 강조해야 했지만, 지금은 강조하면 오히려 과하게 씁니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>완화 방법 — 한 글자씩</h3>
+<span className="keyword-highlight">"반드시!" → "~하세요"</span>
+<p>공격적 표현을 한 단계 부드럽게 — 그것만으로 과다 트리거가 사라집니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">통찰</span>
+<div className="principle-body">
+<h3>신입한텐 "꼭!" — 경력한텐 "해주세요"</h3>
+<p>지시의 강도는 대상의 숙련도에 맞춘다 — 사람도 AI도 똑같습니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+## 실무에서의 "제안 vs 실행" 활용
+
+<DocOnly>
+
+여러분이 Claude.ai나 다른 AI 도구를 쓸 때 "제안 vs 실행" 원칙을 바로 적용할 수 있습니다. 세 가지 상황을 준비했습니다.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>상황 1 · 기획서</h3>
+<span className="keyword-highlight">"아이디어를 제안해줘" → 목록</span>
+<p>"초안을 작성해줘" → 완성된 초안. 동사 하나 차이</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>상황 2 · 이메일</h3>
+<span className="keyword-highlight">"개선할 점을 알려줘" → 피드백</span>
+<p>"더 전문적으로 다시 써줘" → 수정된 이메일</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>상황 3 · 데이터</h3>
+<span className="keyword-highlight">"문제점을 분석해줘" → 분석</span>
+<p>"정리해서 표로 만들어줘" → 완성된 표</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">패턴</span>
+<div className="principle-body">
+<h3>탐색 단계 = 제안 / 실행 단계 = 실행</h3>
+<p>세 시나리오 모두 같은 구조 — 어느 단계인지 먼저 판단하고, 그에 맞는 동사를 씁니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">결합</span>
+<div className="principle-body">
+<h3>1단계 제안 → 검토 → 2단계 실행</h3>
+<p>"개선할 방향 3가지를 제안해줘" → 선택 → "2번 방향으로 다시 써줘"</p>
+<p>방향은 내가 잡고, 실행은 AI가 — 안전하면서 결과물은 완성됩니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+## 병렬 도구 호출 최적화
+
+<DocOnly>
+
+Claude의 최신 모델은 병렬 도구 실행에 뛰어납니다:
+
+- 연구 중 여러 탐색적 검색을 **동시에** 실행
+- 맥락을 더 빠르게 구축하기 위해 **여러 파일을 한 번에** 읽기
+- bash 명령을 **병렬로** 실행 (시스템 성능의 병목이 될 수도 있음)
+
+### 최대 병렬 효율을 위한 프롬프트
+
+```xml
+<use_parallel_tool_calls>
+여러 도구를 호출하려고 하고 도구 호출 간에 의존성이 없다면,
+모든 독립적인 도구 호출을 병렬로 수행하세요. 예를 들어,
+3개의 파일을 읽을 때 3개의 도구 호출을 병렬로 실행하여
+동시에 컨텍스트로 읽어오세요. 속도와 효율을 높이기 위해
+가능한 한 병렬 도구 호출을 최대한 활용하세요.
+
+단, 일부 도구 호출이 이전 호출 결과에 의존하는 경우,
+이러한 도구를 병렬로 호출하지 말고 순차적으로 호출하세요.
+</use_parallel_tool_calls>
+```
+
+### 병렬 실행을 줄이기 위한 프롬프트
+
+```
+안정성을 보장하기 위해 각 단계 사이에 짧은 일시 정지를 두고
+작업을 순차적으로 실행하세요.
+```
+
+</DocOnly>
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>API 개발자 대상 부록</h3>
+<span className="keyword-highlight">병렬 도구 호출</span>
+<p>직장인은 "이런 게 있구나" 정도로 들으셔도 됩니다. 파일 3개 동시에 읽으면 3배 빨라집니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>선택 기준</h3>
+<span className="keyword-highlight">속도가 우선 = 병렬 / 안정성이 우선 = 순차</span>
+<p>여기서도 "명시적으로 지시하라"는 오늘의 원칙이 그대로 적용됩니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>📋 오늘의 정리</h3>
+<p>1. 행동을 원하면 행동 동사를 쓰세요 — "제안해줘" vs "수정해줘"</p>
+<p>2. AI의 적극성은 조절할 수 있다 — 적극 모드 / 신중 모드</p>
+<p>3. 제안과 실행을 단계적으로 결합하라 — 먼저 탐색, 그다음 실행</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">커뮤니케이션 통찰</span>
+<div className="principle-body">
+<h3>좋은 프롬프트는 좋은 업무 지시와 같습니다</h3>
+<p>"봐줘"는 보고, "수정해줘"는 수정합니다 — AI든 사람이든, 원하는 걸 명확히 말해야 그대로 돌아옵니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘 하나만 해보세요</h3>
+<span className="keyword-highlight">프롬프트 마지막 동사 체크</span>
+<p>"제안해줘"인가 — 탐색 중 / "수정해줘"인가 — 실행 중 / 동사 하나가 결과를 바꿉니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘은 행동하게 만드는 법</h3>
+<span className="keyword-highlight">다음 시간: 사고와 추론</span>
+<p>AI가 행동하기 전에 <strong>먼저 생각하게</strong> 만드는 법</p>
+</div>
+</SlideOnly>

@@ -6,15 +6,331 @@ import { Callout, Tabs } from 'nextra/components'
 
 # AI에게 정체성 설정하기
 
-<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#model-self-knowledge">공식문서에서 보기</OriginalDocLink>
+<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#model-self-knowledge">공식문서 원문 섹션 — 모델 자기 인식 (API에서 모델 식별 용도)</OriginalDocLink>
 
-"모델 자기 인식"이란 Claude가 자신의 역할과 정체성을 어떻게 이해하는가입니다. 직장인이 Claude에게 **"너는 우리 팀의 마케팅 어시스턴트야"**라고 정체성을 설정하면, 일관된 관점에서 답변합니다.
+{/* ==================== Part 1: Opening (Slides 1-6) ==================== */}
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>Chapter 1 · 9강</h3>
+<span className="keyword-highlight">AI에게 정체성 설정하기</span>
+<p>지금까지 배운 6가지를 하나로 묶는 마지막 퍼즐</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<img src="/illustrations/07-give-a-role/bunshin.png" alt="분신술 — 나를 여럿으로 복제한 모습" className="slide-illustration" />
+<div className="keyword-card hero">
+<h3>상상해 봅시다</h3>
+<span className="keyword-highlight">나를 복제할 수 있다면?</span>
+<p>우리 팀 상황, 고객, 업무 맥락을 다 아는 또 하나의 나</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">?</span>
+<div className="principle-body">
+<h3>이 복제본이 가능하다면</h3>
+<p>내가 출장 중일 때, 휴가 중일 때, 회의 중일 때 — 나 대신 답해줄 수 있습니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘 배울 것</h3>
+<span className="keyword-highlight">AI를 '우리 팀의 나'로 만들기</span>
+<p>정체성 한 문장이면 됩니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<span className="metric-number">1</span>
+<p>정체성이란 무엇인가</p>
+</div>
+<div className="keyword-card metric">
+<span className="metric-number">2</span>
+<p>역할과 정체성의 차이</p>
+</div>
+<div className="keyword-card metric">
+<span className="metric-number">3</span>
+<p>정체성 프롬프트 만들기</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>Chapter 1의 마지막 강의</h3>
+<span className="keyword-highlight">6가지 + 1가지 = 완성</span>
+<p>지금까지 배운 모든 원칙이 오늘 하나로 합쳐집니다</p>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 2: Ch.1 리뷰 (Slides 7-10) ==================== */}
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>지금까지 배운 6가지 원칙</h3>
+<p>1. 명확하게 말하기</p>
+<p>2. 맥락 추가하기</p>
+<p>3. 예시 보여주기</p>
+<p>4. XML로 구조화하기</p>
+<p>5. 역할 부여하기</p>
+<p>6. 긴 문서 다루기</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>질문</h3>
+<span className="keyword-highlight">이 6가지를 하나로 묶는다면?</span>
+<p>매번 6가지를 다 쓰는 건 번거롭습니다. 한 번에 설정하는 방법이 있을까요?</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>답</h3>
+<span className="keyword-highlight">정체성 설정하기</span>
+<p>6가지 원칙이 하나의 문단에 녹아 있는 프롬프트 — 그게 정체성입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">=</span>
+<div className="principle-body">
+<h3>정체성 = 6원칙의 결정체</h3>
+<p>오늘 배울 '정체성' 한 문단에 지난 6강의 원칙이 모두 담깁니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 3: Identity 단어 해부 (Slides 11-16) ==================== */}
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>먼저 단어부터</h3>
+<span className="keyword-highlight">Identity의 어원</span>
+<p>라틴어 identitas에서 왔습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>identitas의 뜻</h3>
+<span className="keyword-highlight">동일함</span>
+<p>시간이 지나도, 상황이 바뀌어도 — 변하지 않고 남는 것</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>핵심 통찰</h3>
+<p>역할은 바뀔 수 있어도, 정체성은 바뀌지 않습니다. 그것이 모든 행동의 기반이 됩니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>비유로 이해하기</h3>
+<span className="keyword-highlight">명함 vs 자기소개서</span>
+<p>둘 다 '나'를 설명하지만, 깊이가 다릅니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<img src="/illustrations/06-xml-tags/name-tag.png" alt="명함" className="slide-illustration small" />
+<div className="keyword-card principle">
+<span className="principle-number">명함</span>
+<div className="principle-body">
+<h3>역할 = 명함</h3>
+<p>"마케팅 전문가" — 한 줄. 전문성만 드러납니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<img src="/illustrations/06-xml-tags/contract.png" alt="자기소개서 · 맥락이 담긴 문서" className="slide-illustration small" />
+<div className="keyword-card principle">
+<span className="principle-number">소개서</span>
+<div className="principle-body">
+<h3>정체성 = 자기소개서</h3>
+<p>"B2B SaaS 회사의 마케터, 주 고객은 중소기업 IT 담당자, 기술 블로그 중심 운영" — 소속·관점·맥락이 다 담깁니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 4: 공식문서 연결 (Slides 17-21) ==================== */}
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>공식문서에서는?</h3>
+<span className="keyword-highlight">Model self-knowledge</span>
+<p>Anthropic 공식문서의 섹션 이름 — 모델 자기 인식</p>
+</div>
+</SlideOnly>
+
+---
+
+<Callout emoji="📖">
+공식문서의 "Model self-knowledge" 섹션은 원래 **API에서 Claude가 자기 모델을 식별하는 용도**를 다룹니다. 예를 들어 원문은 `"어시스턴트는 Anthropic이 만든 Claude입니다"`처럼 한 문장으로 모델의 정체를 알려주거나, `claude-opus-4-6` 같은 모델 문자열을 직접 지정하는 방식을 소개합니다. 이번 강의는 이 개념의 뿌리 — **"AI에게 자기 자신이 누구인지 알려준다"** — 를 살려 직장인 관점의 **조직·맥락 정체성 설정**으로 확장 해석합니다.
+</Callout>
+
+<DocOnly>
+
+"모델 자기 인식"을 직장인 관점으로 확장해 보겠습니다. Claude에게 <strong>"너는 우리 팀의 마케팅 어시스턴트야"</strong>라고 정체성을 설정하면, 일관된 관점에서 답변합니다.
 
 새 직원이 입사했을 때 "당신은 마케팅팀 소속이고, 우리 주 고객은 이런 사람들이야"라고 알려주는 것처럼, AI에게도 **누구인지, 어떤 맥락에서 일하는지** 알려주면 훨씬 맞춤화된 답변을 받을 수 있습니다.
 
-<Callout emoji="💡">
-정체성 설정은 단순히 API의 모델 문자열을 지정하는 것보다 훨씬 넓은 개념입니다. **AI가 어떤 조직에 소속되어 있고, 어떤 관점에서 답변해야 하는지**를 정의하는 것입니다. Claude.ai, ChatGPT 등 어떤 도구에서든 대화의 시작 부분에 정체성을 설정할 수 있습니다.
-</Callout>
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">원본</span>
+<div className="principle-body">
+<h3>공식문서의 원래 용도</h3>
+<p>"어시스턴트는 Anthropic이 만든 Claude입니다" — 모델이 자기 정체를 아는 것</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">확장</span>
+<div className="principle-body">
+<h3>이번 강의의 확장 해석</h3>
+<p>"AI에게 자기 자신이 누구인지 알려준다"의 뿌리를 살려, 직장인의 조직·맥락 정체성으로 확장합니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그 뿌리를 한 단어로</h3>
+<span className="keyword-highlight">맞춤화</span>
+<p>오늘 강의의 핵심 키워드입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 5: 맞춤화의 힘 (Slides 22-26) ==================== */}
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">?</span>
+<div className="principle-body">
+<h3>맞춤화란 무엇인가</h3>
+<p>내 상황·내 고객·내 제약에 딱 맞는 답변. 일반 지식이 아니라 '우리 팀 답'이 나오는 것.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">VS</span>
+<div className="principle-body">
+<h3>일반 답변 vs 맞춤 답변</h3>
+<p>같은 질문을 해도 답이 완전히 달라집니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">역할만</span>
+<div className="principle-body">
+<h3>역할만 주면</h3>
+<p>"마케팅 전문가로서" → 일반적으로 잘하는 답변. 교과서 같은 내용.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">정체성</span>
+<div className="principle-body">
+<h3>정체성까지 주면</h3>
+<p>"우리 팀 마케터로서, B2B SaaS, 중소기업 타겟" → 우리 상황에 딱 맞는 답변.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>왜 이렇게 달라질까</h3>
+<span className="keyword-highlight">AI에게 '관점'이 생기기 때문</span>
+<p>관점이 있으면 모든 답변이 그 관점에서 일관되게 나옵니다</p>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 6: Before/After 시연 (Slides 27-34) ==================== */}
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>실제로 비교해봅시다</h3>
+<span className="keyword-highlight">같은 질문 · 다른 결과</span>
+<p>정체성 없이 vs 정체성 설정 후</p>
+</div>
+</SlideOnly>
+
+---
+
+<DocOnly>
 
 ## 정체성 없이 vs 정체성 설정 후
 
@@ -37,9 +353,112 @@ Claude: B2B SaaS와 중소기업 IT 담당자에 특화된 전략 제안 (기술
   </Tabs.Tab>
 </Tabs>
 
+</DocOnly>
+
+<SlideOnly>
+
+<h2 className="slide-title-left">❌ 정체성 없이</h2>
+
+```
+마케팅 전략 아이디어 줘
+```
+
+</SlideOnly>
+
 ---
 
+<SlideOnly>
+
+<h2 className="slide-title-left">❌ Claude의 답변</h2>
+
+<img src="/illustrations/07-give-a-role/confused-worker.png" alt="일반론만 내놓는 곤란한 답변" className="slide-illustration small" />
+
+일반적이고 교과서적인 마케팅 전략 나열
+- SNS 마케팅을 활용하세요
+- 콘텐츠 마케팅을 시도하세요
+- 이메일 뉴스레터를 만드세요
+
+→ 타겟이 불분명하고, 우리 회사 상황과 맞지 않음
+
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">왜?</span>
+<div className="principle-body">
+<h3>왜 이런 답이 나오나</h3>
+<p>AI는 '우리 회사'가 뭔지 모르기 때문에, 세상의 모든 회사에 통하는 일반적인 답을 줍니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+
+<h2 className="slide-title-left">✅ 정체성 설정 후</h2>
+
+```
+너는 우리 회사의 마케팅팀 소속이야.
+우리는 B2B SaaS 제품을 판매하고,
+주 고객은 중소기업 IT 담당자야.
+이 맥락에서 마케팅 전략 아이디어를 줘
+```
+
+</SlideOnly>
+
+---
+
+<SlideOnly>
+
+<h2 className="slide-title-left">✅ Claude의 답변</h2>
+
+<img src="/images/illustrations/slide20-happy-employee.png" alt="맥락에 맞는 실행 가능한 답변" className="slide-illustration small" />
+
+B2B SaaS와 중소기업 IT 담당자에 특화된 전략
+- 기술 블로그 마케팅
+- 무료 체험 → 유료 전환 전략
+- IT 커뮤니티 타겟 광고
+- 중소기업 CIO 대상 웨비나
+
+→ 바로 실행 가능한 답변
+
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">핵심</span>
+<div className="principle-body">
+<h3>결정적 차이</h3>
+<p>프롬프트 3줄만 추가했을 뿐인데, 답변이 '일반론'에서 '우리 팀 답'으로 바뀝니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>3줄의 힘</h3>
+<span className="keyword-highlight">소속 · 제품 · 고객</span>
+<p>이 세 가지만 알려줘도 AI가 달라집니다</p>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 7: 실무 사례 1 - 팀 전용 어시스턴트 (Slides 35-39) ==================== */}
+
 ## 실무에서 이렇게 쓰세요
+
+<SlideOnly>
+<div className="slide-breadcrumb">실무에서 이렇게 쓰세요 → ① 팀 전용 어시스턴트</div>
+<img src="/images/illustrations/slide21-caring-communication.png" alt="친절한 인사팀 어시스턴트" className="slide-illustration small" />
+</SlideOnly>
 
 <UseCaseCard
   emoji="🏢"
@@ -50,6 +469,61 @@ Claude: B2B SaaS와 중소기업 IT 담당자에 특화된 전략 제안 (기술
 직원이 질문하면 관련 규정을 인용하면서 친절하게 안내해줘.
 모르는 내용은 "인사팀에 직접 문의해주세요"라고 안내해.`}
 />
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">분해</span>
+<div className="principle-body">
+<h3>이 프롬프트 뜯어보기</h3>
+<p>네 줄에 네 가지가 들어있습니다 — 소속, 근거, 스타일, 한계</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary left-title">
+<h3>인사팀 프롬프트의 4요소</h3>
+<p>1. <strong>소속</strong> — "인사팀 소속 어시스턴트"</p>
+<p>2. <strong>근거</strong> — "취업규칙과 사규 기반"</p>
+<p>3. <strong>스타일</strong> — "규정을 인용하며 친절하게"</p>
+<p>4. <strong>한계</strong> — "모르면 인사팀에 문의"</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">한계</span>
+<div className="principle-body">
+<h3>"한계 포함"의 힘</h3>
+<p>AI가 아는 척 꾸며내지 않고, 모르는 걸 "모른다"고 말하게 됩니다. 신뢰도가 올라갑니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>인사팀 어시스턴트 효과</h3>
+<span className="keyword-highlight">24시간 신입 온보딩</span>
+<p>사내 규정 질문이 몰리는 분기 · 신입 입사철에 특히 강력합니다</p>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 8: 실무 사례 2 - 프로젝트 PM (Slides 40-43) ==================== */}
+
+<SlideOnly>
+<div className="slide-breadcrumb">실무에서 이렇게 쓰세요 → ② 프로젝트 PM</div>
+<img src="/illustrations/06-xml-tags/contract.png" alt="프로젝트 계약서 · 맥락을 담은 문서" className="slide-illustration small" />
+</SlideOnly>
 
 <UseCaseCard
   emoji="📝"
@@ -63,7 +537,210 @@ Claude: B2B SaaS와 중소기업 IT 담당자에 특화된 전략 제안 (기술
 
 ---
 
+<SlideOnly>
+<div className="keyword-card summary left-title">
+<h3>PM 프롬프트의 4요소</h3>
+<p>1. <strong>역할</strong> — "ABC 프로젝트 PM 보조"</p>
+<p>2. <strong>규모</strong> — "6개월 · 5천만원"</p>
+<p>3. <strong>현재 단계</strong> — "2단계 설계"</p>
+<p>4. <strong>제약</strong> — "일정·예산 고려"</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">제약</span>
+<div className="principle-body">
+<h3>"제약 고려"가 중요한 이유</h3>
+<p>예산·일정이 없는 PM 답변은 허공에 뜬 아이디어입니다. 제약이 있어야 실행 가능한 답이 나옵니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>PM 정체성 효과</h3>
+<span className="keyword-highlight">"이 프로젝트 맥락에서"</span>
+<p>매번 상황을 다시 설명할 필요가 없습니다 — 한 번 설정으로 끝</p>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 9: 클라이맥스 - 7원칙 종합 (Slides 44-52) ==================== */}
+
+<SlideOnly>
+<img src="/illustrations/06-xml-tags/eureka.png" alt="발견의 순간" className="slide-illustration" />
+<div className="keyword-card hero">
+<h3>여기서 멈춰봅시다</h3>
+<span className="keyword-highlight">인사팀 프롬프트를 다시 보세요</span>
+<p>이 네 줄에 뭐가 숨어있을까요?</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+
+<h2 className="slide-title-left">다시 보는 인사팀 프롬프트</h2>
+
+```
+너는 우리 인사팀 소속 어시스턴트야.        ← ?
+취업규칙과 사규를 기반으로 답변해.        ← ?
+관련 규정을 인용하면서 친절하게 안내해줘.  ← ?
+모르는 내용은 "인사팀에 문의"라고 안내해.  ← ?
+```
+
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">7강</span>
+<div className="principle-body">
+<h3>"인사팀 소속 어시스턴트야"</h3>
+<p>= 역할 부여하기 (7강) — 누구로서 일할지 알려줍니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">4강</span>
+<div className="principle-body">
+<h3>"취업규칙과 사규를 기반으로"</h3>
+<p>= 맥락 추가하기 (4강) — 어떤 배경에서 답할지 알려줍니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">8강</span>
+<div className="principle-body">
+<h3>"관련 규정을 인용하면서"</h3>
+<p>= 긴 문서 다루기 (8강) — 문서에서 근거를 가져오는 방식</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">3강</span>
+<div className="principle-body">
+<h3>"친절하게 안내해줘"</h3>
+<p>= 명확하고 직접적으로 (3강) — 어떤 톤으로 말할지 알려줍니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary left-title">
+<h3>정체성 프롬프트 = 6원칙의 종합</h3>
+<p>"인사팀 소속" = <strong>7강 역할</strong></p>
+<p>"취업규칙 기반" = <strong>4강 맥락</strong></p>
+<p>"규정 인용" = <strong>8강 긴 문서</strong></p>
+<p>"친절하게" = <strong>3강 명확</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>이것이 바로</h3>
+<span className="keyword-highlight">Chapter 1의 마지막 퍼즐</span>
+<p>7가지 원칙이 하나의 정체성 프롬프트에서 만납니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>놀라운 사실</h3>
+<span className="keyword-highlight">예시·XML·원칙까지 모두 녹일 수 있습니다</span>
+<p>이번 장에선 4가지만 매핑했지만, 실제 업무 프롬프트엔 7가지가 다 들어갑니다</p>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 10: 콜백 & 회수 (Slides 53-56) ==================== */}
+
+<SlideOnly>
+<img src="/illustrations/07-give-a-role/confused-worker.png" alt="맥락을 모르는 천재 직원" className="slide-illustration" />
+<div className="keyword-card hero">
+<h3>3강 기억나시나요?</h3>
+<span className="keyword-highlight">기억 상실 천재 직원</span>
+<p>매번 처음부터 설명해야 하는 천재</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<img src="/illustrations/07-give-a-role/intern.png" alt="새로 온보딩 중인 직원" className="slide-illustration" />
+<div className="keyword-card hero">
+<h3>정체성 프롬프트 = </h3>
+<span className="keyword-highlight">천재에게 주는 온보딩 문서</span>
+<p>한 번만 주면 되는 — 완벽한 자기소개서</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>Chapter 1 · 7원칙 총정리</h3>
+<p>1. 명확하게 말하기 — 모호하지 않게</p>
+<p>2. 맥락 추가하기 — 왜 이걸 하는지</p>
+<p>3. 예시 보여주기 — 원하는 결과를 보여주고</p>
+<p>4. XML로 구조화하기 — 깔끔하게 정리하고</p>
+<p>5. 역할 부여하기 — 누구로 일할지 알려주고</p>
+<p>6. 긴 문서 다루기 — 대량 정보를 체계적으로</p>
+<p>7. 정체성 설정하기 — 모든 걸 하나로 합쳐서</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>가장 중요한 통찰</h3>
+<span className="keyword-highlight">좋은 커뮤니케이션의 7가지 원칙</span>
+<p>AI 프롬프팅 기술이 아닙니다. 사람과 사람 사이의 좋은 소통의 기본입니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+{/* ==================== Part 11: 연습·정리·액션·예고 (Slides 57-60) ==================== */}
+
 ## 연습문제
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>직접 해보세요</h3>
+<span className="keyword-highlight">나만의 정체성 프롬프트 만들기</span>
+<p>소속 부서 · 주요 업무 · 주 고객을 한 문단으로</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
 
 <Quiz
   hint="자신의 부서, 회사의 주요 업무, 고객/이해관계자를 포함해 보세요"
@@ -75,7 +752,11 @@ Claude: B2B SaaS와 중소기업 IT 담당자에 특화된 전략 제안 (기술
 **나만의 정체성 프롬프트 만들기**: 자신의 업무 맥락에 맞는 AI 정체성 프롬프트를 작성해보세요. 소속 부서, 회사의 주요 업무, 고객/이해관계자 정보를 포함하세요.
 </Quiz>
 
+</DocOnly>
+
 ---
+
+<DocOnly>
 
 ## 정리
 
@@ -83,28 +764,26 @@ Claude: B2B SaaS와 중소기업 IT 담당자에 특화된 전략 제안 (기술
 
 | # | 배운 것 | 핵심 |
 |---|---------|------|
-| 1 | **정체성 ≠ 역할** | 역할은 전문성, 정체성은 소속·관점·맥락 — "마케팅팀 소속이고 주 고객은 중소기업 IT 담당자" |
+| 1 | **정체성 ≠ 역할** | 역할은 전문성, 정체성은 소속·관점·맥락 |
 | 2 | **새 직원 온보딩과 같다** | AI에게도 누구인지, 어떤 맥락에서 일하는지 알려주면 맞춤화된 답변 |
 | 3 | **일관성의 힘** | 정체성을 한번 설정하면 이후 모든 대화에서 그 관점이 유지된다 |
 
+</DocOnly>
+
 <SlideOnly>
-<div className="keyword-card summary">
-<h3>오늘의 정리</h3>
+<div className="keyword-card summary left-title">
+<h3>📋 오늘의 정리</h3>
 <p>1. 역할 = 전문성, 정체성 = 소속 + 관점 + 맥락</p>
 <p>2. AI 온보딩 = 사람 온보딩과 같다</p>
 <p>3. 한번 설정하면 모든 대화에서 관점이 유지된다</p>
 </div>
 </SlideOnly>
 
-<Callout emoji="💬">
+---
 
-**"AI에게 정체성을 주는 건, 새 팀원에게 우리 팀을 소개하는 것과 같습니다."**
+<DocOnly>
 
-누구인지, 어디 소속인지, 누구를 위해 일하는지 알려주면 AI가 우리 팀의 맥락에 맞는 답변을 합니다.
-
-</Callout>
-
-### 오늘의 액션
+## 오늘의 액션
 
 다음에 AI와 대화를 시작할 때, 맨 첫 줄에 **정체성 한 문장**을 추가해 보세요.
 
@@ -114,10 +793,46 @@ Claude: B2B SaaS와 중소기업 IT 담당자에 특화된 전략 제안 (기술
 
 소속과 고객만 넣어도 됩니다. 그것만으로 답변이 우리 팀 맥락에 맞게 달라지는 걸 직접 체감하실 거예요.
 
+</DocOnly>
+
 <SlideOnly>
 <div className="keyword-card hero">
-<h3>오늘 하나만 해보세요</h3>
-<span className="keyword-highlight">정체성 한 문장 추가하기</span>
-<p>너는 우리 ___팀 소속이야.</p>
+<h3>오늘의 액션</h3>
+<span className="keyword-highlight">오늘 하나만 해보세요</span>
+<p>다음 대화의 첫 줄에 — 정체성 한 문장을 추가</p>
 </div>
 </SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary left-title">
+<h3>📋 정체성 한 문장 템플릿</h3>
+<p>너는 우리 <code>[부서명]팀</code> 소속이야.</p>
+<p>우리 주 고객은 <code>[주 고객]</code>이고,</p>
+<p>이 맥락에서 답변해줘.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>처음엔 간단하게</h3>
+<span className="keyword-highlight">소속 + 고객, 두 가지면 충분</span>
+<p>그것만으로 답변이 '우리 팀 답'으로 바뀌는 걸 체감하실 거예요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<img src="/images/illustrations/slide20-happy-employee.png" alt="새로운 챕터를 여는 기대감" className="slide-illustration" />
+<div className="keyword-card hero">
+<h3>다음 강의 예고</h3>
+<span className="keyword-highlight">Chapter 2 — 출력과 형식</span>
+<p>AI의 답변 구조를 내가 원하는 대로 만드는 법</p>
+</div>
+</SlideOnly>
+
+> 다음 강의: **Chapter 2 — 출력과 형식** · AI의 답변 구조를 내가 원하는 대로 만드는 법을 배웁니다.

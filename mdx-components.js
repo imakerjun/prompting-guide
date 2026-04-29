@@ -4,6 +4,16 @@ import { Quiz } from './src/components/Quiz'
 import { UseCaseCard, ResourceLink } from './src/components/UseCaseCard'
 import { LearningPath } from './src/components/LearningPath'
 import { SlideOnly, DocOnly } from './src/components/SlideVisibility'
+import {
+  SlideHero,
+  SlideIllustrationWithCard,
+  SlideMetric,
+  SlidePrinciple,
+  SlideSectionTitle,
+  SlideSummary,
+  SlideTextCenter,
+  SlideTitleFollowsBody,
+} from './src/components/SlideTemplates'
 
 const docsComponents = getDocsMDXComponents()
 
@@ -16,5 +26,13 @@ export const useMDXComponents = components => ({
   LearningPath,
   SlideOnly,
   DocOnly,
+  SlideHero,
+  SlideMetric,
+  SlidePrinciple,
+  SlideSummary,
+  SlideSectionTitle,
+  SlideTextCenter,
+  SlideTitleFollowsBody,
+  SlideIllustrationWithCard,
   ...components
 })

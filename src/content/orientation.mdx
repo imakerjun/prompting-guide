@@ -6,17 +6,233 @@ import { Callout, Tabs } from 'nextra/components'
 
 # 강의 소개
 
-## 앤트로픽 공식문서로 배우는 프롬프트 엔지니어링
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>앤트로픽 공식문서로 배우는</h3>
+<span className="keyword-highlight">프롬프트 엔지니어링</span>
+<p>원리를 알면 시행착오가 줄어듭니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+AI 프롬프트를 잘 쓰고 싶은데 어디서부터 시작해야 할지 막막하셨나요? 이 강의는 Claude를 만든 앤트로픽의 **프롬프트 엔지니어링 공식문서**를 출발점으로 삼아, 왜 공식문서를 먼저 봐야 하는지, 그리고 왜 프롬프트 엔지니어링이 AI 학습의 기본이 되는지 풀어가는 해설 강의입니다.
+
+<Callout emoji="🧭">
+이 페이지는 `강의 소개`와 `강의 로드맵`을 하나로 합친 시작 페이지입니다. 여기서 강의의 목적과 16강 전체 지도를 함께 잡고, 다음으로 [프롬프트 엔지니어링 개요](/docs)로 넘어가면 가장 자연스럽습니다.
+</Callout>
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>오늘 OT의 여정</h3>
+<p>1. 공감 — "AI 답이 너무 뻔해서" 문제</p>
+<p>2. 약속 — 원리를 이해하면 달라지는 것</p>
+<p>3. Before / After 맛보기</p>
+<p>4. 왜 공식문서인가 — 빠름 · 직접성 · 오래가는 원리</p>
+<p>5. 왜 프롬프트 엔지니어링인가 — input부터 바꾸기</p>
+<p>6. 커리큘럼 · 활용법 — 전체 지도와 학습 페이스</p>
+</div>
+</SlideOnly>
+
+---
+
+## 이런 경험, 있으신가요?
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/illustrations/07-give-a-role/confused-worker.png" alt="뻔한 답변에 답답한 직장인" className="slide-illustration" />
+<p>AI한테 뭔가를 물어봤는데<br/><strong>답이 너무 뻔한 거예요.</strong><br/>"그래, 그건 나도 아는데…"</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+ChatGPT든 Claude든 AI한테 뭔가를 물어봤는데 돌아온 답이 너무 뻔한 경험, 있으신가요? "그래, 그건 나도 아는데…" 원하는 건 그게 아니었죠.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>그래서 프롬프트를 이리저리 고쳐봐요.<br/><strong>단어를 바꾸고, 길게도 써보고, 짧게도 써보고.</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그런데</h3>
+<span className="keyword-highlight">뭘 어떻게 바꿔야 하는지 감이 안 옵니다</span>
+<p>매번 운에 맡기는 기분</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/images/illustrations/slide02-document-pile.png" alt="쏟아지는 프롬프트 템플릿과 자료들" className="slide-illustration" />
+<p>검색하면 "프롬프트 잘 쓰는 법" 템플릿은 쏟아지는데<br/><strong>왜 되는지는 설명이 없어요.</strong><br/>"이거 복사해서 붙여넣기 하세요."</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그대로 해봤는데</h3>
+<span className="keyword-highlight">어떨 땐 되고 어떨 땐 안 돼요</span>
+<p>왜 되는지도, 왜 안 되는지도 모르는 채로</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+인터넷에 검색하면 템플릿이 쏟아지지만, 그대로 해봐도 어떨 때는 되고 어떨 때는 안 됩니다. 왜 되는지도 모르고 왜 안 되는지도 모릅니다. 결국 AI를 쓰는 건데 AI를 제대로 쓰고 있는 건지 확신이 없는 거죠.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>결국 AI를 쓰는 건데<br/>AI를 제대로 쓰고 있는 건지 <strong>확신이 없는 거죠.</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/illustrations/06-xml-tags/eureka.png" alt="원리를 발견한 순간" className="slide-illustration" />
+<p>저도 그랬습니다.<br/>그런데 어느 순간 알게 됐어요.<br/><strong>문제는 재능이 아니라 원리였다는 것.</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+## 이 강의가 드리는 약속
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>약속 하나</h3>
+<span className="keyword-highlight">원리를 이해하면 시행착오가 줄어듭니다</span>
+<p>그 원리가 의외로 가까운 곳에 있거든요</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+이 강의를 끝까지 따라오시면 AI한테 왜 이렇게 말해야 하는지 원리를 이해하게 됩니다. 원리를 알면 시행착오가 줄어들고, **도구가 바뀌어도 흔들리지 않는 사고법**을 갖게 됩니다.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>약속 둘</h3>
+<p>도구가 바뀌어도 흔들리지 않는 <strong>사고법</strong>을 갖게 됩니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>AI 도구는 <strong>매달 바뀝니다.</strong><br/>새 모델, 새 기능, 새 인터페이스.<br/>그때마다 새 강의를 또 들을 수는 없잖아요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/images/illustrations/slide20-happy-employee.png" alt="공식문서를 스스로 읽을 수 있게 된 사람" className="slide-illustration" />
+<p>이 강의가 드리고 싶은 진짜 선물은<br/><strong>공식문서를 스스로 읽는 힘</strong>입니다.<br/>어떤 도구가 나와도 직접 파악할 수 있게 됩니다.</p>
+</div>
+</SlideOnly>
 
 <Callout emoji="🎯">
-**이 강의를 끝까지 따라오시면**, AI한테 왜 이렇게 말해야 하는지 원리를 이해하게 됩니다. 원리를 알면 시행착오가 줄어들고, **도구가 바뀌어도 흔들리지 않는 사고법**을 갖게 됩니다.
+원리를 이해하면 AI 모델이 바뀌어도, 새로운 기능이 추가되어도 스스로 적응할 수 있습니다. 이 강의가 드리고 싶은 진짜 선물은 **공식문서를 스스로 읽는 힘**입니다.
 </Callout>
 
 ---
 
-## Before / After
+## Before / After 맛보기
 
-같은 요청인데, 원리를 아느냐 모르느냐에 따라 결과가 완전히 달라집니다.
+<SlideOnly>
+<h2 className="slide-section-title">같은 요청인데, 결과가 왜 달라질까요?</h2>
+</SlideOnly>
+
+<DocOnly>
+
+같은 요청인데, 원리를 아느냐 모르느냐에 따라 결과가 완전히 달라집니다. 한 번 맛보기로 보여드릴게요.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>여기 프롬프트가 하나 있습니다.<br/><br/><strong>"보고서 써줘."</strong><br/><br/>이러면 AI가 뭘 만들어 낼까요?</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-title-follows-body">
+
+## ❌ Before — "보고서 써줘"
+
+```
+보고서 써줘.
+```
+
+교과서를 펼쳐놓은 것 같은 일반적인 보고서가 나옵니다. 누구한테 보여줄 건지, 어떤 맥락인지 전혀 모르니까요.
+
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그런데 이렇게 바꾸면</h3>
+<span className="keyword-highlight">어떻게 달라질까요?</span>
+<p>같은 "보고서 써줘"인데 — 한 번만 보세요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-title-follows-body">
+
+## ✅ After — 맥락이 추가된 프롬프트
+
+```
+내일 오전 CTO 주관 경영 회의에서 5분 발표할 보고서를 써줘.
+핵심 KPI 3개와 전월 대비 증감, 다음 분기 개선 제안을 포함하고,
+임원 보고용으로 한 페이지 이내로 간결하게.
+```
+
+바로 보고에 쓸 수 있는 수준의 결과물이 나옵니다.
+
+</div>
+</SlideOnly>
+
+<DocOnly>
 
 <Tabs items={['Before', 'After']}>
   <Tabs.Tab>
@@ -37,69 +253,588 @@ import { Callout, Tabs } from 'nextra/components'
   </Tabs.Tab>
 </Tabs>
 
+</DocOnly>
+
 ---
 
-## 다른 강의와 뭐가 다른가
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>같은 "보고서 써줘"인데</h3>
+<span className="keyword-highlight">결과가 완전히 달라집니다</span>
+<p>바로 보고에 쓸 수 있는 수준으로요</p>
+</div>
+</SlideOnly>
 
-| 구분 | 일반 프롬프트 강의 | 이 강의 |
-|------|-------------------|---------|
-| **교재** | 강사 경험, 블로그 정리 | 앤트로픽 **공식문서 원문** |
-| **방법** | "이렇게 하세요" 암기 | "왜 이렇게 썼을까?" **가추법** 추론 |
-| **유효기간** | 도구가 바뀌면 낡아짐 | **원리 중심**이라 도구가 바뀌어도 유효 |
-| **결과** | 팁 몇 개 습득 | **공식문서를 스스로 읽는 힘** |
+---
 
-<Callout emoji="💡">
-AI 도구는 매달 바뀝니다. 새 모델, 새 기능, 새 인터페이스. 그때마다 새 강의를 들을 수는 없잖아요. **공식문서를 스스로 읽는 힘이 있으면** 어떤 도구가 나와도 직접 파악할 수 있습니다.
-</Callout>
+<SlideOnly>
+<div className="slide-text-center">
+<p>이 차이를 만드는 건<br/><strong>특별한 기술이 아닙니다.</strong><br/>원리를 아느냐 모르느냐의 차이예요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>원리를 알면</h3>
+<p>같은 한 줄이라도 결과물의 수준이 완전히 달라집니다 — 이게 오늘 강의의 출발점입니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+## 왜 공식문서를 봐야 할까요?
+
+<SlideOnly>
+<h2 className="slide-section-title">왜 공식문서를 봐야 할까요?</h2>
+</SlideOnly>
+
+<DocOnly>
+
+유튜브, 인스타, 블로그, 스레드처럼 다양한 매체로 활용사례를 보는 건 중요합니다. 다만 최신성과 직접성, 그리고 오래가는 원리까지 함께 잡으려면 공식문서를 같이 봐야 합니다.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>유튜브 · 인스타 · 블로그 · 스레드.<br/><strong>다양한 활용사례를 보는 건 정말 중요합니다.</strong><br/>"이렇게도 쓸 수 있네?"를 배우게 되니까요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>하지만 많은 분들이</h3>
+<span className="keyword-highlight">가장 중요한 소스를 놓칩니다</span>
+<p>세계적인 AI 현업 전문가들이 정성 들여 만든 무료 가이드 — 공식문서</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-illustration-with-card">
+<img src="/illustrations/06-xml-tags/contract.png" alt="앤트로픽 공식문서" className="slide-illustration small" />
+<div className="keyword-card principle">
+<span className="principle-number">1</span>
+<div className="principle-body">
+<h3>가장 빠릅니다</h3>
+<p>최신 정보는 공식문서에 가장 먼저 올라옵니다 — <strong>뉴스레터·블로그·영상보다 빠른 출발점</strong></p>
+</div>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">2</span>
+<div className="principle-body">
+<h3>가장 직접적입니다</h3>
+<p>Claude 같은 서비스를 만드는 사람들이 <strong>"AI를 잘 쓰려면 이렇게 써라"</strong>라고 직접 가이드합니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>셋째</h3>
+<span className="keyword-highlight">가장 오래갑니다</span>
+<p>원리를 배우면 모델이 바뀌어도 감이 아니라 <strong>근거</strong>로 적응할 수 있습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그래서 공식문서에서도</h3>
+<span className="keyword-highlight">프롬프트 엔지니어링부터 봅니다</span>
+<p>AI를 사용할 때 가장 기본이 되는 건 input, 즉 프롬프트니까요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>프롬프트를 어제도 오늘도 비슷하게 쓰고 있다면<br/><strong>AI 실력은 제자리걸음</strong>일 수 있어요.<br/>결과가 더 좋아 보여도 모델이 좋아진 걸 수도 있거든요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>이 사이트는 공식문서 기반 재구성본</h3>
+<p>1. 프롬프트 엔지니어링 핵심부터 먼저 집중</p>
+<p>2. 가독성을 위해 나누고 쉬운 설명·간단한 실습 보강</p>
+<p>3. 원문 링크를 누르면 언제든 공식문서로 이동</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그래서 이 강의는</h3>
+<span className="keyword-highlight">공식문서 기반으로, 프롬프트부터</span>
+<p>빠르고 · 직접적이고 · 오래가는 학습의 출발점을 잡습니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+Anthropic 문서는 제품과 기능이 늘어나면서 구조가 자주 바뀝니다. 그래서 이 사이트에서는 프롬프트 엔지니어링 핵심을 먼저 읽을 수 있도록 주제를 재배열하고, 쉬운 설명과 간단한 실습을 보강했습니다. 각 페이지의 `원문 링크`를 누르면 언제든 공식문서로 넘어가 최신 원문과 직접 연결됩니다.
+
+</DocOnly>
 
 ---
 
 ## 강사 소개
 
-**동준** — 개발자로 일하다가 지금은 교육을 하고 있습니다. AI를 일에 활용하면서 공식문서를 깊이 읽는 게 결국 가장 빠른 길이라는 걸 느꼈고, 그걸 여러분께 나누고 싶어서 이 강의를 만들었습니다.
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>강사 — 임동준</h3>
+<span className="keyword-highlight">개발자에서 교육자로</span>
+<p>AI를 일에 활용하면서 공식문서 읽기가 가장 빠른 길임을 느꼈습니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+**임동준** — 개발자로 일하다가 지금은 교육을 하고 있습니다. AI를 일에 활용하면서 공식문서를 깊이 읽는 게 결국 가장 빠른 길이라는 걸 느꼈고, 그걸 여러분께 나누고 싶어서 이 강의를 만들었습니다.
+
+</DocOnly>
 
 ---
 
-## Chapter 1. 일반 원칙 — 7강 미리보기
+<SlideOnly>
+<div className="slide-text-center">
+<p>공식문서를 깊이 읽는 게<br/><strong>결국 가장 빠른 길</strong>이었어요.<br/>그걸 나누고 싶어서 이 강의를 만들었습니다.</p>
+</div>
+</SlideOnly>
 
-공식문서의 설계 순서를 따라, "가장 널리 쓰이는 기법"부터 배웁니다.
+---
 
-| # | 제목 | 한 줄 미리보기 |
-|---|------|---------------|
-| 01 | [**명확하고 직접적으로**](/docs/best-practices/general-principles/be-clear-and-direct) | AI가 단번에 이해하는 프롬프트 쓰는 법 |
-| 02 | [**맥락을 추가하여 성능 향상**](/docs/best-practices/general-principles/add-context) | "왜"를 한 줄 추가하면 결과가 달라진다 |
-| 03 | [**예시를 효과적으로 사용하기**](/docs/best-practices/general-principles/use-examples) | 말보다 보여주는 게 확실하다 — 예시 3개의 힘 |
-| 04 | [**XML 태그로 프롬프트 구조화**](/docs/best-practices/general-principles/xml-tags) | 프롬프트가 길어지면 AI가 헷갈린다. 구역을 나눠라 |
-| 05 | [**Claude에게 역할 부여하기**](/docs/best-practices/general-principles/give-a-role) | 한 문장이 관점과 톤과 용어를 한 번에 바꿔준다 |
-| 06 | [**긴 컨텍스트 프롬프팅**](/docs/best-practices/general-principles/long-context) | 보고서 20장, 회의록 50페이지를 AI에게 넘기는 전략 |
-| 07 | [**AI에게 정체성 설정하기**](/docs/best-practices/general-principles/model-self-knowledge) | 앞의 6가지를 하나로 합쳐서, 우리 팀 전용 AI를 만든다 |
+## 커리큘럼 훑기 — 16강 전체 지도
 
-<Callout emoji="📖">
-01강의 **"기억 상실이 있는 천재 신입사원"** 비유가 07강에서 **"이 신입사원을 위한 완벽한 온보딩 문서"**로 회수됩니다. 7개 강의가 하나의 이야기처럼 연결됩니다.
-</Callout>
+<SlideOnly>
+<h2 className="slide-section-title">앞으로 뭘 배울까요?</h2>
+</SlideOnly>
+
+<DocOnly>
+
+자 그러면 앞으로 뭘 배울지 훑어볼게요. 총 16강입니다. OT 1강 + 개요 2강 + 본강 13강으로 구성돼요.
+
+### 전체 목차
+
+### OT
+
+| 강 | 제목 | 예상 시간 | 대응 페이지 | 영상 링크 |
+| --- | --- | --- | --- | --- |
+| 0강 | 강의 소개 | 8-10분 | [강의 소개](/docs/orientation) | — |
+
+### 프롬프트 엔지니어링 개요
+
+| 강 | 제목 | 예상 시간 | 대응 페이지 | 영상 링크 |
+| --- | --- | --- | --- | --- |
+| 1강 | 프롬프트 엔지니어링 개요 | 15-18분 | [프롬프트 엔지니어링 개요](/docs) | [보기](https://drive.google.com/file/d/1PjvcSq_7ZtIgIVOZtYh7tsE7mZ0UUA7l/view?usp=sharing) |
+| 2강 | 첫 초안 프롬프트 | 15-18분 | [프롬프팅 모범 사례](/docs/best-practices) | [보기](https://drive.google.com/file/d/1Xio6Naf-5cTiQQLAExFDCY7nhfhQ0Vhn/view?usp=sharing) |
+
+### Ch.1 일반 원칙
+
+| 강 | 제목 | 예상 시간 | 대응 페이지 | 영상 링크 |
+| --- | --- | --- | --- | --- |
+| 3강 | 명확하고 직접적으로 | 15-18분 | [명확하고 직접적으로](/docs/best-practices/general-principles/be-clear-and-direct) | [보기](https://drive.google.com/drive/folders/1uyIVAUer9d4dFgOi_XqKTesRRdZAdkpi?usp=sharing) |
+| 4강 | 맥락을 추가하여 성능 향상 | 17-18분 | [맥락을 추가하여 성능 향상](/docs/best-practices/general-principles/add-context) | [보기](https://drive.google.com/file/d/1N0KgM3wd1gISDNCeXukApSYUsfHm_fRq/view?usp=sharing) |
+| 5강 | 예시를 효과적으로 사용하기 | 15-18분 | [예시를 효과적으로 사용하기](/docs/best-practices/general-principles/use-examples) | [보기](https://drive.google.com/file/d/1K5EAJkf7lT8mg4nVHJBEV1j8evGXhlUN/view?usp=sharing) |
+| 6강 | XML 태그로 프롬프트 구조화 | 15-18분 | [XML 태그로 프롬프트 구조화](/docs/best-practices/general-principles/xml-tags) | [보기](https://drive.google.com/file/d/1PpADRoF4AOZ40I1rG22tu-KpoQobEax0/view?usp=sharing) |
+| 7강 | Claude에게 역할 부여하기 | 15-18분 | [Claude에게 역할 부여하기](/docs/best-practices/general-principles/give-a-role) | [보기](https://drive.google.com/file/d/16mdky0rdrT2GFFcryU0I38dzjjqRXxt6/view?usp=sharing) |
+| 8강 | 긴 컨텍스트 프롬프팅 | 15-18분 | [긴 컨텍스트 프롬프팅](/docs/best-practices/general-principles/long-context) | [보기](https://drive.google.com/file/d/1XrVsq5N9JEgBEas_FuWMQqpbp9lpntEN/view?usp=sharing) |
+| 9강 | AI에게 정체성 설정하기 | 15-18분 | [AI에게 정체성 설정하기](/docs/best-practices/general-principles/model-self-knowledge) | [보기](https://drive.google.com/file/d/1J-wUPn7gAfi8yNZqpiOZ47Rf2sDduCOK/view?usp=sharing) |
+
+### Ch.2 심화 원칙
+
+| 강 | 제목 | 예상 시간 | 대응 페이지 | 영상 링크 |
+| --- | --- | --- | --- | --- |
+| 10강 | 출력과 형식 | 15-18분 | [출력과 형식](/docs/best-practices/practical-applications/output-and-formatting) | — |
+| 11강 | 도구 사용 | 15-18분 | [도구 사용](/docs/best-practices/practical-applications/tool-use) | — |
+| 12강 | 사고와 추론 | 15-18분 | [사고와 추론](/docs/best-practices/practical-applications/thinking-and-reasoning) | — |
+
+### Ch.3 전문 주제
+
+| 강 | 제목 | 예상 시간 | 대응 페이지 | 영상 링크 |
+| --- | --- | --- | --- | --- |
+| 13강 | 에이전트 시스템 | 15-18분 | [에이전트 시스템](/docs/best-practices/advanced-topics/agentic-systems) | — |
+| 14강 | 기능별 팁 | 15-18분 | [기능별 팁 & 마이그레이션](/docs/best-practices/advanced-topics/capability-tips-and-migration) | — |
+| 15강 | 마이그레이션 가이드 | 15-18분 | [기능별 팁 & 마이그레이션](/docs/best-practices/advanced-topics/capability-tips-and-migration) | — |
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p style={{marginBottom: '20px'}}><strong>16강은 세 덩어리</strong>로 움직입니다.</p>
+<div style={{display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '18px', width: '100%', marginBottom: '20px'}}>
+<div style={{padding: '20px 18px', borderRadius: '18px', border: '1px solid rgba(15, 23, 42, 0.12)', background: 'rgba(255, 255, 255, 0.82)'}}>
+<strong style={{display: 'block', fontSize: '1rem', marginBottom: '8px'}}>입구</strong>
+<span style={{display: 'block', fontSize: '0.95rem'}}>강의 소개 (로드맵 포함)</span>
+<span style={{display: 'block', marginTop: '8px', fontSize: '0.84rem', opacity: 0.8}}>왜 배우는지 · 어떻게 따라갈지</span>
+</div>
+<div style={{padding: '20px 18px', borderRadius: '18px', border: '1px solid rgba(15, 23, 42, 0.12)', background: 'rgba(255, 255, 255, 0.82)'}}>
+<strong style={{display: 'block', fontSize: '1rem', marginBottom: '8px'}}>핵심</strong>
+<span style={{display: 'block', fontSize: '0.95rem'}}>개요 2강 · 일반 원칙 7강</span>
+<span style={{display: 'block', marginTop: '8px', fontSize: '0.84rem', opacity: 0.8}}>가장 널리 쓰이는 원리</span>
+</div>
+<div style={{padding: '20px 18px', borderRadius: '18px', border: '1px solid rgba(15, 23, 42, 0.12)', background: 'rgba(255, 255, 255, 0.82)'}}>
+<strong style={{display: 'block', fontSize: '1rem', marginBottom: '8px'}}>확장</strong>
+<span style={{display: 'block', fontSize: '0.95rem'}}>심화 원칙 · 전문 주제</span>
+<span style={{display: 'block', marginTop: '8px', fontSize: '0.84rem', opacity: 0.8}}>필요할 때 넓히고 깊게 보기</span>
+</div>
+</div>
+<p className="muted">16강 · 약 4시간 30분 — OT 1강 + 개요 2강 + 본강 13강</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<h2 className="slide-section-title">📘 개요 2강 — 시작 전 준비</h2>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">01</span>
+<div className="principle-body">
+<h3>프롬프트 엔지니어링 개요</h3>
+<p>운세 뽑기가 아니라 <strong>과학적 설계</strong> — 시작 전 꼭 갖춰야 할 3가지 전제</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">02</span>
+<div className="principle-body">
+<h3>첫 초안 프롬프트</h3>
+<p>AI가 AI를 위한 프롬프트를 만드는 <strong>부트스트래핑</strong> — 앤트로픽 콘솔 시연</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<h2 className="slide-section-title">📗 Chapter 1 — 일반 원칙 (7강)</h2>
+</SlideOnly>
+
+<DocOnly>
+
+공식문서가 "가장 광범위하게 효과적인 기술"이라고 소개하는 7가지 핵심 원칙입니다. 이 일곱 강의가 오늘 OT에서 가장 많은 시간을 차지합니다. 왜냐면 여기가 전체 강의의 심장이거든요.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">03</span>
+<div className="principle-body">
+<h3>명확하고 직접적으로</h3>
+<p>"<strong>기억 상실이 있는 뛰어난 신입사원</strong>" — 이 비유 하나가 AI를 보는 관점을 바꿔줍니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">04</span>
+<div className="principle-body">
+<h3>맥락을 추가하여 성능 향상</h3>
+<p>"왜"를 한 줄 추가하면 결과가 달라집니다 — <strong>한 줄의 맥락이 열 줄의 지시를 대체합니다</strong></p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">05</span>
+<div className="principle-body">
+<h3>예시를 효과적으로 사용하기</h3>
+<p><strong>말보다 보여주는 게 확실합니다</strong> — 예시 3개면 형식을 통제할 수 있어요</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">06</span>
+<div className="principle-body">
+<h3>XML 태그로 프롬프트 구조화</h3>
+<p>프롬프트가 길어지면 AI가 헷갈려요. <strong>태그 하나가 모호함을 제로로</strong> 만듭니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">07</span>
+<div className="principle-body">
+<h3>Claude에게 역할 부여하기</h3>
+<p>"당신은 마케팅 전문가입니다" <strong>한 문장</strong>이 관점·톤·용어를 한 번에 바꿉니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">08</span>
+<div className="principle-body">
+<h3>긴 컨텍스트 프롬프팅</h3>
+<p>보고서 20장·회의록 50페이지 — <strong>문서 먼저, XML로, 인용 요청</strong> 전략</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">09</span>
+<div className="principle-body">
+<h3>AI에게 정체성 설정하기</h3>
+<p>앞의 6가지를 하나로 엮는 마무리 — <strong>우리 팀 전용 AI</strong>를 만듭니다</p>
+</div>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<h2 className="slide-section-title">📙 Chapter 2~6 — 심화·전문 영역 (6강)</h2>
+</SlideOnly>
+
+<DocOnly>
+
+일반 원칙을 익힌 뒤에는 성격이 조금 달라집니다. `10~12강`은 여전히 원리 수업의 연장선에 있는 **심화 원칙**, `13~15강`은 개발자·고급 사용자에게 더 가까운 **전문 주제**로 이어집니다.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">10</span>
+<div className="principle-body">
+<h3>출력과 형식</h3>
+<p>Ch.2 — "하지 마" vs "이렇게 해" · <strong>거울 효과</strong>로 결과물 품질 통제</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">11</span>
+<div className="principle-body">
+<h3>도구 사용</h3>
+<p>Ch.3 — "봐줘" vs "수정해줘" · <strong>제안(Suggest) vs 실행(Act)</strong> 행동 동사의 힘</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">12</span>
+<div className="principle-body">
+<h3>사고와 추론</h3>
+<p>Ch.4 — 과도한 사고의 역설 · <strong>적응형 사고(effort)</strong> 매개변수 활용</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">13</span>
+<div className="principle-body">
+<h3>에이전트 시스템</h3>
+<p>Ch.5 — 자율성과 안전성의 균형 · <strong>가역성 원칙</strong>으로 안전하게 맡기기</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">14</span>
+<div className="principle-body">
+<h3>기능별 팁</h3>
+<p>Ch.6 전반부 — <strong>수정자 프레이밍</strong> · AI 슬롭 · 비전·프론트엔드 디자인</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">15</span>
+<div className="principle-body">
+<h3>마이그레이션 가이드</h3>
+<p>Ch.6 후반부 — Sonnet 4.5→4.6 전환 · <strong>기본값은 바뀌지만 원칙은 불변</strong></p>
+</div>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+</DocOnly>
 
 ---
 
 ## 이렇게 들으면 효과적입니다
 
-### 1. 공식문서를 같이 열어두세요
+<SlideOnly>
+<h2 className="slide-section-title">이 강의를 가장 효과적으로 듣는 3가지 방법</h2>
+</SlideOnly>
 
-저와 함께 원문을 읽으면서 듣는 거예요. 강의를 끄고 나서도 혼자서 공식문서를 읽을 수 있어야 하니까요.
+<DocOnly>
 
-### 2. "왜?"라고 먼저 생각해 보세요
+이 강의를 가장 효과적으로 듣는 방법을 알려드릴게요. 세 가지만 기억하시면 됩니다.
 
-제가 공식문서 문장을 읽기 전에 "앤트로픽이 왜 이 표현을 선택했을까?" 잠깐 생각해 보세요. 이 과정 자체가 사고 훈련이에요.
+</DocOnly>
 
-### 3. 한 강의 듣고 바로 써보세요
+---
 
-배운 원칙을 여러분의 실제 업무에 한 번만 적용해 보세요. 한 번 써보면 열 번 듣는 것보다 남습니다.
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">1</span>
+<div className="principle-body">
+<h3>공식문서를 같이 열어두세요</h3>
+<p>저와 함께 <strong>원문을 읽으면서</strong> 듣는 거예요. 끄고 나서도 혼자 읽을 수 있도록</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">2</span>
+<div className="principle-body">
+<h3>"왜?"라고 먼저 생각해 보세요</h3>
+<p>"앤트로픽이 왜 이 표현을 썼을까?" <strong>잠깐 멈추고</strong> 추론해 보세요 — 이게 사고 훈련</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">3</span>
+<div className="principle-body">
+<h3>한 강의 듣고 바로 써보세요</h3>
+<p>배운 원칙을 여러분 업무에 한 번만 적용해 보세요 — <strong>한 번 써보면 열 번 듣는 것보다 남습니다</strong></p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>📋 추천 학습법</h3>
+<p>1. 공식문서를 같이 열어두세요</p>
+<p>2. "왜?"라고 먼저 생각해 보세요</p>
+<p>3. 한 강의 듣고 바로 써보세요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>추천 페이스</h3>
+<span className="keyword-highlight">출퇴근 30분 — 하루 1강</span>
+<p>한 강의 15~18분 + 실습 10~15분 = 약 16일 루틴</p>
+</div>
+</SlideOnly>
 
 <Callout emoji="⏱️">
-Chapter 1은 총 7강, 한 강의 15~18분. **하루 한 강의씩 들으면 일주일**이면 마칠 수 있습니다.
+직장인이라면 출퇴근 시간에 한 강의씩 듣고, 도착해서 10~15분만 바로 써보세요. 총 16강이라 **약 16일 루틴**으로 잡으면 부담이 가장 적습니다.
 </Callout>
 
 ---
 
-## 다음 강의로
+## 자, 그러면 시작합니다
 
-첫 번째 원칙, [**"명확하고 직접적으로"**](/docs/best-practices/general-principles/be-clear-and-direct)를 다룹니다. 앤트로픽이 공식문서 첫 페이지에서 Claude를 어떻게 소개했는지, 그리고 그 표현 안에 숨어 있는 놀라운 통찰이 뭔지 같이 파헤쳐 봅시다.
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘의 약속 회수</h3>
+<span className="keyword-highlight">원리를 이해하면 흔들리지 않습니다</span>
+<p>이 강의가 드리는 진짜 선물 — 공식문서를 스스로 읽는 힘</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>다음 단계</h3>
+<span className="keyword-highlight">프롬프트 엔지니어링 개요</span>
+<p>이 페이지에서 전체 지도를 잡았으니, 이제 01강으로 들어가 출발점이 되는 3가지 전제를 살펴봅니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+이 페이지에서 강의 소개와 전체 로드맵을 함께 훑었습니다. 이제 [**프롬프트 엔지니어링 개요**](/docs)로 넘어가, 프롬프트 엔지니어링을 시작하기 전에 꼭 갖춰야 할 3가지 전제를 먼저 잡고 들어가면 가장 자연스럽습니다.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>감사합니다</h3>
+<span className="keyword-highlight">바로 다음 영상에서 만나요</span>
+<p>여러분의 프롬프트 엔지니어링 여정이 이제 시작됩니다</p>
+</div>
+</SlideOnly>

@@ -199,8 +199,8 @@
   --nextra-primary-hue: 0;
   --nextra-primary-saturation: 0%;
 
-  --notion-text: #37352f;
-  --notion-text-light: #787774;
+  --notion-text: #1a1a1a;
+  --notion-text-light: #4a4a4a;
   --notion-bg: #ffffff;
   --notion-bg-secondary: #f7f6f3;
   --notion-border: #e9e9e7;
@@ -229,8 +229,14 @@
 /* --- Typography: Notion spacing & weight --- */
 article {
   font-feature-settings: 'kern' 1, 'liga' 1;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 1.75;
   letter-spacing: -0.003em;
+  color: var(--notion-text);
+}
+
+article p,
+article li {
   color: var(--notion-text);
 }
 
@@ -262,10 +268,16 @@ article h3 {
   border: none !important;
   border-radius: 4px !important;
   padding: 16px 16px 16px 12px !important;
+  margin: 1.5em 0 !important;
   font-size: 0.938em !important;
   line-height: 1.65 !important;
   align-items: flex-start !important;
   gap: 8px !important;
+}
+
+/* Slide mode: collapse the baseline margin so keyword-card spacing rules govern */
+.slide-frame .nextra-callout {
+  margin: 0.75em 0 !important;
 }
 
 /* Hide Nextra default SVG icons completely */
@@ -316,11 +328,26 @@ article pre {
 /* --- Tables: Notion-style clean lines --- */
 article table {
   border-collapse: collapse !important;
-  width: 100% !important;
+  width: auto !important;
+  max-width: 100% !important;
   font-size: 0.925em !important;
-  border: 1px solid var(--notion-border) !important;
-  border-radius: 4px !important;
-  overflow: hidden !important;
+  margin: 1.35em 0 1.6em !important;
+  border: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+article table + p,
+article table + ul,
+article table + ol,
+article table + blockquote,
+article table + .nextra-callout,
+article p + table,
+article ul + table,
+article ol + table,
+article blockquote + table,
+article .nextra-callout + table {
+  margin-top: 1.35em !important;
 }
 
 article thead {
@@ -342,7 +369,7 @@ article td {
 }
 
 article tr:last-child td {
-  border-bottom: none !important;
+  border-bottom: 1px solid var(--notion-border-light) !important;
 }
 
 /* --- Blockquote: Notion-style thin border --- */
@@ -473,13 +500,67 @@ nav[aria-label="table of contents"] a:hover {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--notion-bg, #fff);
+  background: #f8f7f4;
+  color: #1a1a1a;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .dark .slide-overlay {
-  background: #191919;
+  background: #1a1a1a;
+}
+
+.dark .slide-overlay {
+  background: #000;
+  color: #e5e5e5;
+}
+
+/* ---- Highlight: text selection coloring ---- */
+.slide-highlight-active .slide-frame ::selection {
+  background: var(--highlight-color, rgba(250, 204, 21, 0.4));
+}
+
+.slide-highlight-active .slide-frame ::-moz-selection {
+  background: var(--highlight-color, rgba(250, 204, 21, 0.4));
+}
+
+/* ---- Highlight color picker dots ---- */
+.slide-highlight-picker {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-right: 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.04);
+}
+
+.dark .slide-highlight-picker {
+  background: rgba(255,255,255,0.06);
+}
+
+.slide-highlight-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  padding: 0;
+  outline: none;
+}
+
+.slide-highlight-dot:hover {
+  transform: scale(1.2);
+}
+
+.slide-highlight-dot.active {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--slide-accent, #d97706);
+  transform: scale(1.15);
+}
+
+.dark .slide-highlight-dot.active {
+  box-shadow: 0 0 0 2px #1a1a1a, 0 0 0 4px var(--slide-accent, #f59e0b);
 }
 
 /* Top control bar */
@@ -488,14 +569,16 @@ nav[aria-label="table of contents"] a:hover {
   justify-content: space-between;
   align-items: center;
   padding: 8px 24px;
-  background: rgba(0,0,0,0.03);
-  border-bottom: 1px solid var(--notion-border, #e9e9e7);
+  background: rgba(255,255,255,0.95);
   flex-shrink: 0;
+  width: calc((100vh - 90px) * 16 / 9);
+  max-width: 100vw;
+  box-sizing: border-box;
+  border-radius: 0;
 }
 
 .dark .slide-controls {
-  background: rgba(255,255,255,0.03);
-  border-bottom-color: #333;
+  background: rgba(30,30,30,0.95);
 }
 
 .slide-counter {
@@ -529,44 +612,209 @@ nav[aria-label="table of contents"] a:hover {
   background: rgba(255,255,255,0.06);
 }
 
-/* Slide content frame — optimized for lecture recording */
+/* Slide content frame — 16:9 aspect ratio for recording */
 .slide-frame {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 48px 100px;
-  max-width: 960px;
-  margin: 0 auto;
-  width: 100%;
+  padding: 56px 100px;
   box-sizing: border-box;
+  background: #f8f7f4;
+  /* 16:9 ratio: fill available height, constrain width */
+  width: calc((100vh - 90px) * 16 / 9); /* 90px = controls + nav height */
+  max-width: 100vw;
+  max-height: calc(100vh - 90px);
+  /* 세로 가운데 정렬 — padding 대칭 필수 (비대칭이면 justify-content: center가 치우쳐 보임) */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dark .slide-frame {
+  background: #1a1a1a;
+}
+
+/* Force text color in slide frame — override Nextra/Tailwind inherited colors */
+.slide-frame h1,
+.slide-frame h2,
+.slide-frame h3,
+.slide-frame h4,
+.slide-frame p,
+.slide-frame li,
+.slide-frame span,
+.slide-frame td,
+.slide-frame th,
+.slide-frame strong,
+.slide-frame a {
+  color: inherit !important;
 }
 
 /* Enlarge text for recording readability */
-.slide-frame h1 { font-size: 2.2em !important; margin-bottom: 0.6em !important; }
-.slide-frame h2 { font-size: 1.8em !important; margin-top: 0 !important; margin-bottom: 0.5em !important; border-bottom: none !important; }
-.slide-frame h3 { font-size: 1.3em !important; }
-.slide-frame p { font-size: 1.15em !important; line-height: 1.75 !important; }
-.slide-frame li { font-size: 1.1em !important; line-height: 1.7 !important; }
-.slide-frame pre { font-size: 1.05em !important; }
-.slide-frame code { font-size: 1em !important; }
+.slide-frame h1 { font-size: 2.4em !important; margin-bottom: 0.6em !important; }
+.slide-frame h2 { font-size: 2em !important; margin-top: 0 !important; margin-bottom: 0.5em !important; border-bottom: none !important; }
+.slide-frame h3 { font-size: 1.5em !important; }
+.slide-frame .slide-section-title {
+  font-size: 1.8em !important;
+  font-weight: 600 !important;
+  color: var(--slide-accent) !important;
+  margin-bottom: 1.2em !important;
+  padding-bottom: 0.4em !important;
+  border-bottom: 2px solid var(--slide-accent-border) !important;
+}
+.slide-frame p { font-size: 1.5em !important; line-height: 1.75 !important; }
+.slide-frame li { font-size: 1.4em !important; line-height: 1.75 !important; }
+.slide-frame pre { font-size: 1.15em !important; }
+.slide-frame code { font-size: 1.1em !important; }
+
+/* h2/h3 centered in slide mode (UseCaseCard has no h-tags inside) */
+.slide-frame h2,
+.slide-frame h3 { text-align: center !important; }
+
+/* Title left-align utilities — 내용이 좌정렬일 때 제목도 맞춰 정렬 */
+.slide-frame h2.slide-title-left,
+.slide-frame h3.slide-title-left { text-align: left !important; }
+.slide-frame .keyword-card.left-title h3 { text-align: left !important; }
+
+/* Slide illustrations — 중앙 배치, 높이 제한, 하단 여백 */
+.slide-frame .slide-illustration {
+  display: block !important;
+  margin: 0 auto 24px !important;
+  max-height: 30vh !important;
+  width: auto !important;
+}
+.slide-frame .slide-illustration.small { max-height: 20vh !important; }
+.slide-frame .slide-illustration.large { max-height: 42vh !important; }
+.slide-chrome-hidden .slide-frame .slide-illustration { max-height: 36vh !important; }
+.slide-chrome-hidden .slide-frame .slide-illustration.large { max-height: 48vh !important; }
+
+/* Chrome-hidden: even larger text for 4K recording */
+.slide-chrome-hidden .slide-frame h1 { font-size: 2.8em !important; }
+.slide-chrome-hidden .slide-frame h2 { font-size: 2.2em !important; }
+.slide-chrome-hidden .slide-frame h3 { font-size: 1.7em !important; }
+.slide-chrome-hidden .slide-frame .slide-section-title { font-size: 2em !important; }
+.slide-chrome-hidden .slide-frame p { font-size: 1.5em !important; line-height: 1.85 !important; }
+.slide-chrome-hidden .slide-frame li { font-size: 1.4em !important; }
+.slide-chrome-hidden .slide-frame pre { font-size: 1.25em !important; }
+.slide-chrome-hidden .slide-frame code { font-size: 1.2em !important; }
 
 .slide-frame img {
   max-height: 45vh;
   width: auto;
 }
 
+.slide-overlay .slide-frame pre {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+}
+
+.slide-frame .usecase-card {
+  margin: 0 auto;
+  max-width: 980px;
+  padding: 24px 28px;
+  border-radius: 12px;
+}
+
+.slide-frame .usecase-header {
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.slide-frame .usecase-emoji {
+  font-size: 1.5em;
+}
+
+.slide-frame .usecase-title {
+  font-size: 1.25em;
+}
+
+.slide-frame .usecase-desc {
+  font-size: 1.05em;
+  margin: 0 0 14px !important;
+}
+
+.slide-frame .usecase-prompt {
+  font-size: 1em !important;
+  line-height: 1.55 !important;
+}
+
+/* Slide text content — left-aligned in slide mode (maxWidth handled by JS/inline) */
+.slide-overlay .slide-frame p,
+.slide-overlay .slide-frame ul,
+.slide-overlay .slide-frame ol,
+.slide-overlay .slide-frame blockquote,
+.slide-overlay .slide-frame table,
+.slide-overlay .slide-frame pre {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Override Nextra's prose max-width/margin inside slide frame */
+.slide-overlay .slide-frame [class*="x:"],
+.slide-overlay .slide-frame [class*="x:"][class*="x:"] {
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.slide-frame .slide-section-title {
+  max-width: 800px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center;
+}
+
+/* Chrome-hidden: wider text for 4K */
+.slide-chrome-hidden .slide-frame > p,
+.slide-chrome-hidden .slide-frame > ul,
+.slide-chrome-hidden .slide-frame > ol,
+.slide-chrome-hidden .slide-frame > blockquote,
+.slide-chrome-hidden .slide-frame > table {
+  max-width: 900px;
+}
+
+.slide-chrome-hidden .slide-frame .slide-section-title {
+  max-width: 900px;
+}
+
+/* Left-aligned section title (e.g. 더 알아보기 — matches list body alignment) */
+.slide-frame .slide-section-title-left {
+  font-size: 2em !important;
+  font-weight: 700 !important;
+  color: var(--slide-accent, #c2410c) !important;
+  text-align: left !important;
+  margin: 0 0 1em 0 !important;
+  padding-bottom: 0.3em !important;
+  border-bottom: 2px solid var(--slide-accent-border, #fed7aa) !important;
+}
+.slide-chrome-hidden .slide-frame .slide-section-title-left { font-size: 2.4em !important; }
+
+/* Case marker — small breadcrumb on callback slides ("⚖️ 계약서 사례 · 핵심") */
+.slide-frame .slide-case-marker {
+  font-size: 1em !important;
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  letter-spacing: 0.02em;
+  margin-bottom: 18px !important;
+}
+.dark .slide-frame .slide-case-marker { color: #f3f4f6 !important; }
+.slide-chrome-hidden .slide-frame .slide-case-marker { font-size: 1.2em !important; }
+
 /* Bottom navigation */
 .slide-nav {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 16px;
   padding: 12px 24px;
-  border-top: 1px solid var(--notion-border, #e9e9e7);
   flex-shrink: 0;
+  width: calc((100vh - 90px) * 16 / 9);
+  max-width: 100vw;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.95);
 }
 
 .dark .slide-nav {
-  border-top-color: #333;
+  background: rgba(30,30,30,0.95);
 }
 
 .slide-nav-btn {
@@ -598,18 +846,20 @@ nav[aria-label="table of contents"] a:hover {
   background: rgba(255,255,255,0.06);
 }
 
-/* Chrome-hidden mode: no controls, bigger content */
+/* Chrome-hidden mode: hide controls, frame expands to full 16:9 */
 .slide-chrome-hidden .slide-controls,
 .slide-chrome-hidden .slide-nav {
   display: none;
 }
 
 .slide-chrome-hidden .slide-frame {
-  padding: 56px 80px;
+  /* Recalculate: no 90px controls, full viewport */
+  width: calc(100vh * 16 / 9);
+  max-height: 100vh;
 }
 
 .slide-chrome-hidden .slide-frame img {
-  max-height: 75vh;
+  max-height: 50vh;
 }
 
 /* Presenter mode hint */
@@ -650,6 +900,13 @@ nav[aria-label="table of contents"] a:hover {
   display: none;
 }
 
+/* Hide ALL slide-split <hr> in doc mode.
+   Every --- in MDX is for slide splitting only;
+   h2 headings provide section breaks in doc mode. */
+main[data-pagefind-body] > hr {
+  display: none;
+}
+
 /* ============================================
    Slide Accent Color
    ============================================ */
@@ -666,6 +923,355 @@ nav[aria-label="table of contents"] a:hover {
 }
 
 /* ============================================
+   Slide Text Center — 서사형 텍스트 슬라이드
+   ============================================ */
+.slide-text-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 0 60px;
+}
+
+/* .slide-frame p !important 를 이기려면 같이 !important 필요 */
+.slide-only .slide-text-center > p {
+  font-size: 2em !important;
+  line-height: 1.8 !important;
+  color: var(--notion-text, #37352f);
+  max-width: 800px;
+  margin: 0;
+}
+
+.slide-only .slide-text-center > p.muted {
+  font-size: 1.7em !important;
+  color: var(--notion-text, #37352f);
+}
+
+/* Chrome-hidden: 녹화용 더 큰 텍스트 */
+.slide-chrome-hidden .slide-only .slide-text-center > p {
+  font-size: 2.4em !important;
+}
+
+.slide-chrome-hidden .slide-only .slide-text-center > p.muted {
+  font-size: 2em !important;
+}
+
+.slide-comparison-caption {
+  margin-top: 18px !important;
+  font-size: 1.2em !important;
+  line-height: 1.5 !important;
+  text-align: center !important;
+  font-weight: 700;
+  color: var(--slide-accent) !important;
+}
+
+.slide-note-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--slide-accent-soft);
+  color: var(--slide-accent);
+  font-size: 0.9em !important;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.slide-tag-chip {
+  display: block;
+  max-width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--slide-accent-border);
+  background: #ffffff;
+  color: #9a3412;
+  font-size: 1.05em !important;
+  font-weight: 700;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.dark .slide-tag-chip {
+  background: #252525;
+  color: #fdba74;
+}
+
+.slide-focus-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 48vh;
+  padding: 42px 50px;
+  border: 1px solid var(--slide-accent-border);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(217, 119, 6, 0.08), rgba(217, 119, 6, 0.02));
+  text-align: center;
+}
+
+.slide-focus-board p {
+  max-width: 760px;
+  margin: 0 !important;
+  font-size: 1.45em !important;
+  line-height: 1.55 !important;
+  text-align: center !important;
+}
+
+.slide-focus-board p.muted {
+  font-size: 1.05em !important;
+  color: var(--notion-text-light, #787774) !important;
+}
+
+.slide-compare-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 14px;
+}
+
+.slide-compare-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100%;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--notion-border, #e9e9e7);
+  background: var(--notion-bg, #ffffff);
+}
+
+.slide-compare-card.bad {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.18);
+}
+
+.slide-compare-card.good {
+  background: rgba(34, 197, 94, 0.06);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.slide-compare-label {
+  font-size: 0.96em !important;
+  font-weight: 800;
+  line-height: 1.3 !important;
+  color: var(--notion-text, #37352f) !important;
+}
+
+.slide-compare-copy {
+  margin: 0 !important;
+  font-size: 1.1em !important;
+  line-height: 1.52 !important;
+  color: var(--notion-text, #37352f) !important;
+}
+
+.slide-compare-list {
+  margin: 0 !important;
+  padding-left: 1.2em !important;
+}
+
+.slide-compare-list li {
+  margin: 0 0 6px 0 !important;
+  font-size: 1em !important;
+  line-height: 1.45 !important;
+}
+
+.slide-rule-chain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 54vh;
+  padding: 28px 34px;
+  border-radius: 16px;
+  border: 1px solid var(--notion-border, #e9e9e7);
+  background: var(--notion-bg-secondary, #f7f6f3);
+  text-align: center;
+}
+
+.slide-rule-step {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  width: min(820px, 100%);
+  padding: 18px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--notion-border, #e9e9e7);
+  background: var(--notion-bg, #ffffff);
+}
+
+.slide-rule-command {
+  font-size: 1.35em !important;
+  line-height: 1.35 !important;
+  color: var(--notion-text, #37352f) !important;
+}
+
+.slide-rule-arrow {
+  font-size: 1.8em !important;
+  font-weight: 800;
+  color: var(--slide-accent) !important;
+}
+
+.slide-rule-result {
+  font-size: 1.28em !important;
+  font-weight: 800;
+  line-height: 1.35 !important;
+  color: var(--slide-accent) !important;
+}
+
+.slide-rule-chain p.muted {
+  margin: 0 !important;
+  max-width: 760px;
+  font-size: 1.05em !important;
+  line-height: 1.45 !important;
+  color: var(--notion-text-light, #787774) !important;
+}
+
+.slide-pair-board {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 34px 40px;
+  border-radius: 16px;
+  border: 1px solid var(--notion-border, #e9e9e7);
+  background: var(--notion-bg-secondary, #f7f6f3);
+}
+
+.slide-pair-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.3fr);
+  gap: 18px;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--notion-bg, #ffffff);
+  border: 1px solid var(--notion-border, #e9e9e7);
+}
+
+.slide-pair-usage {
+  font-size: 1.2em !important;
+  font-weight: 700;
+  color: var(--notion-text, #37352f) !important;
+}
+
+.slide-pair-technique {
+  font-size: 1.25em !important;
+  line-height: 1.35 !important;
+  color: var(--slide-accent) !important;
+}
+
+.slide-migration-board {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 32px 36px;
+  border-radius: 16px;
+  border: 1px solid var(--notion-border, #e9e9e7);
+  background: var(--notion-bg-secondary, #f7f6f3);
+}
+
+.slide-migration-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.slide-migration-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 18px;
+  min-height: 96px;
+  border-radius: 14px;
+  background: var(--notion-bg, #ffffff);
+  border: 1px solid var(--notion-border, #e9e9e7);
+}
+
+.slide-migration-card:last-child {
+  grid-column: 1 / -1;
+}
+
+.slide-migration-card strong {
+  font-size: 1.05em !important;
+  color: var(--notion-text, #37352f) !important;
+}
+
+.slide-migration-card p {
+  margin: 0 !important;
+  font-size: 1em !important;
+  line-height: 1.4 !important;
+  color: var(--slide-accent) !important;
+}
+
+/* ============================================
+   Slide Memo Card — 섹션 전환용 메모지 스타일
+   ============================================ */
+.slide-only .slide-memo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 40px auto;
+  padding: 64px 80px;
+  max-width: 680px;
+  background: #fff8e1;
+  border: 2px solid #f2c94c;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.dark .slide-only .slide-memo-card {
+  background: #3d3520;
+  border-color: #b8923a;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.slide-only .slide-memo-card::before {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 22px;
+  background: rgba(217, 119, 6, 0.25);
+  border-radius: 2px;
+}
+
+.slide-only .slide-memo-icon {
+  font-size: 5em !important;
+  line-height: 1;
+}
+
+.slide-only .slide-memo-title {
+  font-size: 2.6em !important;
+  font-weight: 700;
+  color: #5c4a1f;
+}
+
+.dark .slide-only .slide-memo-title { color: #e8d49a; }
+
+.slide-only .slide-memo-sub {
+  font-size: 1.7em !important;
+  color: #5c4a1f;
+  font-weight: 500;
+}
+
+.dark .slide-only .slide-memo-sub { color: #c7a96a; }
+
+.slide-chrome-hidden .slide-only .slide-memo-icon { font-size: 6em !important; }
+.slide-chrome-hidden .slide-only .slide-memo-title { font-size: 3em !important; }
+.slide-chrome-hidden .slide-only .slide-memo-sub { font-size: 1.9em !important; }
+
+/* ============================================
    SlideOnly Keyword Cards — Base
    ============================================ */
 .slide-only .keyword-card {
@@ -676,7 +1282,29 @@ nav[aria-label="table of contents"] a:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 50vh;
+  min-height: 45vh;
+}
+
+/* Chrome-hidden: keyword cards fill more of the 16:9 frame */
+.slide-chrome-hidden .slide-only .keyword-card {
+  min-height: 55vh;
+  margin: 0;
+}
+
+.slide-chrome-hidden .slide-only .keyword-card.hero {
+  padding: 60px 100px;
+}
+
+.slide-chrome-hidden .slide-only .keyword-card .keyword-highlight {
+  font-size: 2.6em !important;
+}
+
+.slide-chrome-hidden .slide-only .keyword-card h3 {
+  font-size: 1.6em !important;
+}
+
+.slide-chrome-hidden .slide-only .keyword-card p {
+  font-size: 1.6em !important;
 }
 
 /* ============================================
@@ -699,20 +1327,20 @@ nav[aria-label="table of contents"] a:hover {
 }
 
 .slide-only .keyword-card.hero h3 {
-  font-size: 1.2em !important;
-  font-weight: 400;
+  font-size: 1.4em !important;
+  font-weight: 500;
   margin: 0 0 20px 0 !important;
-  color: var(--notion-text-light, #787774);
+  color: var(--notion-text, #37352f);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .slide-only .keyword-card.hero p {
-  font-size: 1.1em !important;
+  font-size: 1.5em !important;
   margin: 4px 0 !important;
-  color: var(--notion-text-light, #787774);
+  color: var(--notion-text, #37352f);
   line-height: 1.5 !important;
-  opacity: 0.7;
+  font-weight: 500;
 }
 
 /* ============================================
@@ -741,9 +1369,9 @@ nav[aria-label="table of contents"] a:hover {
 }
 
 .slide-only .keyword-card.metric p {
-  font-size: 1em !important;
+  font-size: 1.3em !important;
   margin: 4px 0 !important;
-  color: var(--notion-text-light, #787774);
+  color: var(--notion-text, #37352f);
   line-height: 1.5 !important;
 }
 
@@ -754,38 +1382,56 @@ nav[aria-label="table of contents"] a:hover {
   background: transparent;
   border: none;
   padding: 40px 60px;
-  text-align: left;
-  flex-direction: row;
-  gap: 28px;
-  min-height: auto;
+  text-align: center;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .slide-only .keyword-card.principle .principle-number {
-  font-size: 3em !important;
+  font-size: 5em !important;
   font-weight: 800;
   color: var(--slide-accent);
   line-height: 1 !important;
-  flex-shrink: 0;
 }
 
 .slide-only .keyword-card.principle .principle-body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
 }
 
 .slide-only .keyword-card.principle h3 {
-  font-size: 1.6em !important;
+  font-size: 2.4em !important;
   font-weight: 700;
-  margin: 0 0 8px 0 !important;
+  margin: 0 0 12px 0 !important;
   color: var(--notion-text, #37352f);
 }
 
 .slide-only .keyword-card.principle p {
-  font-size: 1.1em !important;
+  font-size: 1.7em !important;
   margin: 0 !important;
-  color: var(--notion-text-light, #787774);
-  line-height: 1.5 !important;
+  color: var(--notion-text, #37352f);
+  line-height: 1.6 !important;
+}
+
+.slide-only .slide-illustration-with-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56vh;
+}
+
+.slide-only .slide-illustration-with-card > .slide-illustration {
+  margin-bottom: 0 !important;
+}
+
+.slide-only .slide-illustration-with-card .keyword-card.principle {
+  min-height: auto;
+  margin: 0;
+  padding: 8px 60px 0;
+  gap: 10px;
 }
 
 .dark .slide-only .keyword-card.principle h3 {
@@ -800,6 +1446,21 @@ nav[aria-label="table of contents"] a:hover {
   border: 1px solid var(--notion-border, #e9e9e7);
   padding: 48px 60px;
   text-align: left;
+  align-items: stretch;
+}
+
+.slide-only .slide-title-follows-body h2,
+.slide-only .slide-title-follows-body h3,
+.slide-only .keyword-card.summary h2,
+.slide-only .keyword-card.summary h3 {
+  width: 100%;
+  align-self: stretch;
+  text-align: left !important;
+}
+
+.slide-only .slide-title-follows-body {
+  width: 100%;
+  text-align: left;
 }
 
 .dark .slide-only .keyword-card.summary {
@@ -808,31 +1469,317 @@ nav[aria-label="table of contents"] a:hover {
 }
 
 .slide-only .keyword-card.summary h3 {
-  font-size: 1.4em !important;
-  font-weight: 400;
-  margin: 0 0 24px 0 !important;
-  color: var(--notion-text-light, #787774);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  text-align: center;
+  font-size: 2em !important;
+  font-weight: 700;
+  margin: 0 0 28px 0 !important;
+  color: var(--slide-accent);
+}
+
+.dark .slide-only .keyword-card.summary h3 {
+  color: #e5c07b;
 }
 
 .slide-only .keyword-card.summary p {
-  font-size: 1.3em !important;
-  margin: 0 !important;
-  padding: 14px 0;
+  font-size: 1.5em !important;
+  margin: 0 0 8px 0 !important;
+  padding: 14px 18px 14px 22px;
   color: var(--notion-text, #37352f);
-  line-height: 1.5 !important;
-  border-bottom: 1px solid var(--notion-border, #e9e9e7);
-}
-
-.slide-only .keyword-card.summary p:last-child {
+  line-height: 1.7 !important;
   border-bottom: none;
+  border-left: 3px solid var(--slide-accent-border);
+  background: rgba(217, 119, 6, 0.04);
+  border-radius: 0 6px 6px 0;
 }
 
 .dark .slide-only .keyword-card.summary p {
   color: #e0e0e0;
-  border-bottom-color: #444;
+  background: rgba(217, 119, 6, 0.08);
+}
+
+@media (max-height: 430px) and (orientation: landscape) {
+  .slide-overlay.slide-chrome-hidden .slide-frame {
+    padding: 18px 22px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame img,
+  .slide-overlay.slide-chrome-hidden .slide-frame .slide-illustration {
+    max-height: 24vh !important;
+    margin-bottom: 12px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame h1 {
+    font-size: 2rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame h2 {
+    font-size: 1.5rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame h3 {
+    font-size: 1.05rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame p {
+    font-size: 1.02rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame li {
+    font-size: 0.98rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame pre,
+  .slide-overlay.slide-chrome-hidden .slide-frame code {
+    font-size: 0.8rem !important;
+    line-height: 1.32 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .slide-text-center {
+    min-height: auto;
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .slide-text-center > p {
+    font-size: 1.08rem !important;
+    line-height: 1.42 !important;
+    max-width: 100%;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .slide-text-center > p.muted {
+    font-size: 0.95rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card {
+    min-height: auto;
+    margin: 0;
+    padding: 20px 22px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.hero {
+    padding: 24px 24px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.hero .keyword-highlight {
+    font-size: 1.9rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.hero h3 {
+    font-size: 0.9rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.hero p {
+    font-size: 0.98rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.metric {
+    padding: 20px 22px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.metric .keyword-highlight {
+    font-size: 2rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.metric p {
+    font-size: 0.92rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.principle {
+    padding: 16px 18px;
+    gap: 10px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.principle .principle-number {
+    font-size: 2.4rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.principle h3 {
+    font-size: 1.28rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.principle p {
+    font-size: 0.94rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.summary {
+    padding: 20px 22px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.summary h3 {
+    font-size: 1.15rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-only .keyword-card.summary p {
+    font-size: 0.92rem !important;
+    line-height: 1.34 !important;
+    padding: 8px 10px 8px 14px;
+    margin-bottom: 4px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame .usecase-card {
+    padding: 16px 18px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame .usecase-title {
+    font-size: 1rem;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame .usecase-desc {
+    font-size: 0.8rem;
+    margin-bottom: 8px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame .usecase-prompt {
+    font-size: 0.78rem !important;
+    line-height: 1.32 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-frame [role="tab"] {
+    font-size: 0.74rem !important;
+    padding: 4px 8px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-comparison-caption {
+    margin-top: 10px !important;
+    font-size: 0.9rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-compare-board {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding-top: 8px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-compare-card {
+    gap: 8px;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-compare-label {
+    font-size: 0.82rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-compare-copy {
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-compare-list {
+    padding-left: 1em !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-compare-list li {
+    font-size: 0.84rem !important;
+    line-height: 1.32 !important;
+    margin-bottom: 4px !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-focus-board {
+    min-height: auto;
+    padding: 18px 18px;
+    gap: 10px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-note-pill {
+    font-size: 0.72rem !important;
+    padding: 4px 10px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-tag-chip {
+    font-size: 0.8rem !important;
+    padding: 10px 12px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-focus-board p {
+    font-size: 0.94rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-focus-board p.muted {
+    font-size: 0.8rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-pair-board {
+    padding: 18px 18px;
+    gap: 10px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-rule-chain {
+    min-height: auto;
+    padding: 18px 18px;
+    gap: 10px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-rule-step {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-rule-command {
+    font-size: 0.92rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-rule-arrow {
+    font-size: 1rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-rule-result {
+    font-size: 0.94rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-rule-chain p.muted {
+    font-size: 0.82rem !important;
+    line-height: 1.32 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-pair-row {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr);
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-pair-usage {
+    font-size: 0.86rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-pair-technique {
+    font-size: 0.9rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-migration-board {
+    padding: 18px 18px;
+    gap: 10px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-migration-grid {
+    gap: 8px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-migration-card {
+    min-height: 0;
+    padding: 10px 12px;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-migration-card strong {
+    font-size: 0.82rem !important;
+  }
+
+  .slide-overlay.slide-chrome-hidden .slide-migration-card p {
+    font-size: 0.78rem !important;
+    line-height: 1.28 !important;
+  }
 }
 
 /* Step list (legacy, kept for compatibility) */
@@ -857,7 +1804,7 @@ nav[aria-label="table of contents"] a:hover {
    ============================================ */
 .lp-container {
   max-width: 520px;
-  margin: 24px auto;
+  margin: 24px 0;
   display: flex;
   flex-direction: column;
   gap: 0;

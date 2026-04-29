@@ -41,7 +41,7 @@ export default async function RootLayout({ children }) {
               </div>
             </Footer>
           }
-          sidebar={{ defaultMenuCollapseLevel: 2 }}
+          sidebar={{ defaultMenuCollapseLevel: 1 }}
           toc={{ title: '이 페이지에서' }}
           editLink={null}
           feedback={{ content: null }}

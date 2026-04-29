@@ -1,0 +1,902 @@
+---
+title: 출력과 형식
+---
+
+import { Callout } from 'nextra/components'
+
+# 출력과 형식
+
+<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#output-and-formatting">공식문서 원문 섹션 — 출력과 형식 (Output and Formatting)</OriginalDocLink>
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>Chapter 2의 시작</h3>
+<span className="keyword-highlight">결과물의 품질</span>
+<p>Ch.1 "뭘 해줘, 왜 해줘, 넌 누구야" → Ch.2 "결과물의 모양을 제어하기"</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>Ch.1 7원칙 한 줄 회고</h3>
+<p>1. 명확하게 말하기 · 2. 맥락 추가하기 · 3. 예시 보여주기</p>
+<p>4. XML로 구조화하기 · 5. 역할 부여하기</p>
+<p>6. 긴 문서 다루기 · 7. 정체성 설정하기</p>
+<p><strong>한 줄 요약 — "뭘 해줘, 왜 해줘, 넌 누구야"</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>일을 잘 시키면 끝인가요?</h3>
+<span className="keyword-highlight">결과물이 내 모양이어야 써먹는다</span>
+<p>아무리 일을 잘 시켜도, 결과물의 모양이 안 맞으면 그대로 쓸 수 없습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/illustrations/06-xml-tags/paper-pile-boss.png" alt="불릿 보고서에 당황한 상사" className="slide-illustration" />
+<p>AI한테 보고서를 부탁했더니<br/><strong>마크다운 불릿 포인트</strong>가 잔뜩 달린 결과물.<br/>이걸 임원한테 그대로 보여줄 수 있나요?</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/illustrations/07-give-a-role/confused-worker.png" alt="어색한 슬랙 공지 앞의 직원" className="slide-illustration" />
+<p>슬랙 공지를 부탁했더니<br/><strong>"안녕하세요, 다름이 아니라..."</strong> 이메일 말투.<br/>이걸 팀 슬랙에 그대로 붙일 수 있나요?</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>Format의 어원</h3>
+<span className="keyword-highlight">forma = 틀, 모양</span>
+<p>라틴어 forma — "틀, 모양" — 출력과 형식의 "형식"이 여기서 왔습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<div style={{fontSize: '112px', marginBottom: '12px', lineHeight: 1}}>🧱</div>
+<p>같은 찰흙이라도<br/>어떤 <strong>틀</strong>에 넣느냐에 따라<br/>컵이 되기도 하고 접시가 되기도 합니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>AI 출력도 마찬가지</h3>
+<span className="keyword-highlight">같은 내용, 다른 형식 = 다른 가치</span>
+<p>어떤 형식으로 나오느냐에 따라 완제품이 되기도 하고, 한참 다듬어야 하는 반제품이 되기도 합니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>오늘의 여정</h3>
+<p>1. 최신 Claude의 <strong>커뮤니케이션 스타일</strong></p>
+<p>2. <strong>"하지 마" 대신 "이렇게 해"</strong> — 오늘의 첫 원칙</p>
+<p>3. 프롬프트 스타일이 출력 스타일을 만든다 — <strong>거울 효과</strong></p>
+<p>4. 실무 <strong>3사례</strong>와 공통 패턴</p>
+<p>5. <strong>사전 채움 마이그레이션</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>1. 먼저 알아둘 것</h3>
+<span className="keyword-highlight">최신 Claude는 예전과 다릅니다</span>
+<p>세 가지가 바뀌었습니다 — 하나씩 살펴봅니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+## 커뮤니케이션 스타일과 간결함
+
+Claude의 최신 모델은 이전 모델에 비해 더 간결하고 자연스러운 커뮤니케이션 스타일을 가지고 있습니다:
+
+- **더 직접적이고 근거 있는**: 자기 축하식 업데이트가 아닌, 사실 기반의 진행 보고를 제공합니다
+- **더 대화적인**: 약간 더 유창하고 일상적이며, 기계적이지 않습니다
+- **덜 장황한**: 별도로 요청하지 않는 한, 효율을 위해 상세한 요약을 건너뛸 수 있습니다
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>변화 ① 더 직접적</h3>
+<span className="keyword-highlight">자기 축하식 멘트 → 사실 기반</span>
+</div>
+</SlideOnly>
+
+<SlideOnly>
+<div className="slide-compare-board">
+<div className="slide-compare-card bad">
+<span className="slide-compare-label">이전 Claude</span>
+<p className="slide-compare-copy">잘하셨습니다! 정말 좋은 질문이네요!<br/>다음과 같이 작성해 드리겠습니다.</p>
+</div>
+<div className="slide-compare-card good">
+<span className="slide-compare-label">최신 Claude</span>
+<p className="slide-compare-copy">여기 결과입니다.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>변화 ② 더 대화적</h3>
+<span className="keyword-highlight">기계적이지 않고 친구처럼</span>
+<p>약간 더 유창하고 일상적인 톤 — 편하게 읽히는 문장이 기본값입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>변화 ③ 덜 장황</h3>
+<span className="keyword-highlight">별도 요청 없으면 상세 요약을 건너뜁니다</span>
+<p>군더더기를 줄이고 효율 위주로 — 최신 Claude의 기본 태도입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<DocOnly>
+
+Claude가 도구 호출 후 구두 요약을 건너뛰고 다음 작업으로 바로 넘어갈 수 있습니다. 추론 과정에 대한 더 많은 가시성을 원한다면:
+
+</DocOnly>
+
+<DocOnly>
+
+```
+도구 사용이 포함된 작업을 완료한 후, 수행한 작업에 대한
+간단한 요약을 제공하세요.
+```
+
+</DocOnly>
+
+<SlideOnly>
+<div className="slide-focus-board">
+<span className="slide-note-pill">그대로 복붙할 한 줄</span>
+<code className="slide-tag-chip">도구 사용이 포함된 작업을 완료한 후, 수행한 작업에 대한 간단한 요약을 제공하세요.</code>
+<p><strong>간결함은 유지</strong>하되, 내가 보고 싶은 작업 요약만 추가로 받습니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>1. 정리 — 최신 Claude 3변화</h3>
+<p>① <strong>더 직접적</strong> — 사실 기반</p>
+<p>② <strong>더 대화적</strong> — 친구처럼 편하게</p>
+<p>③ <strong>덜 장황</strong> — 군더더기 최소</p>
+<p>이 성격을 알고 시작하면 오해가 줄어듭니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>2. 오늘의 첫 원리</h3>
+<span className="keyword-highlight">공식문서의 가장 중요한 문장</span>
+<p>한 문장이 오늘 강의 전체를 관통합니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+## 응답 형식 제어하기
+
+### 하지 말라가 아니라, 무엇을 하라고 말하기
+
+</DocOnly>
+
+---
+
+<DocOnly>
+
+| ❌ 비효과적 | ✅ 효과적 |
+| --- | --- |
+| `응답에 마크다운을 사용하지 마세요` | `응답은 매끄럽게 흐르는 산문 문단으로 구성하세요.` |
+
+</DocOnly>
+
+<SlideOnly>
+<div className="slide-compare-board">
+<div className="slide-compare-card bad">
+<span className="slide-compare-label">❌ 비효과적</span>
+<p className="slide-compare-copy">응답에 마크다운을 사용하지 마세요</p>
+</div>
+<div className="slide-compare-card good">
+<span className="slide-compare-label">✅ 효과적</span>
+<p className="slide-compare-copy">응답은 매끄럽게 흐르는 산문 문단으로 구성하세요.</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>같은 목적, 다른 접근</h3>
+<p>둘 다 <strong>마크다운 없는 깔끔한 텍스트</strong>를 원합니다 — 하나는 "하지 마", 하나는 "이렇게 해"</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>앤트로픽은 왜 이 둘을 나란히 놓았을까?</h3>
+<span className="keyword-highlight">잠깐 생각해 보세요</span>
+<p>답은 실무 비유에 있습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/illustrations/07-give-a-role/intern.png" alt="후배에게 표 넣지 말라고 지시하는 장면" className="slide-illustration" />
+<p>후배한테 <strong>"보고서에 표 넣지 마"</strong>라고 했더니<br/>표는 안 넣었어요 — <strong>불릿 포인트를 잔뜩</strong> 넣어서 가져왔습니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-rule-chain">
+<span className="slide-note-pill">부정형 지시의 무한 루프</span>
+<div className="slide-rule-step">
+<strong className="slide-rule-command">"표 넣지 마"</strong>
+<span className="slide-rule-arrow">→</span>
+<span className="slide-rule-result">불릿 포인트</span>
+</div>
+<div className="slide-rule-step">
+<strong className="slide-rule-command">"불릿도 넣지 마"</strong>
+<span className="slide-rule-arrow">→</span>
+<span className="slide-rule-result">번호 목록</span>
+</div>
+<p className="muted">하지 말라는 지시는 다른 형식으로 계속 비껴갑니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">원리</span>
+<div className="principle-body">
+<h3>부정형의 함정</h3>
+<p>"하지 마"는 <strong>뭘 하면 안 되는지</strong>만 알려주고, <strong>뭘 해야 하는지</strong>는 모릅니다 — 그래서 다른 방식으로 계속 비껴갑니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>"하지 마" 대신 "이렇게 해"</h3>
+<span className="keyword-highlight">오늘의 첫 번째 원리</span>
+<p>AI한테만 해당되는 게 아닙니다 — 출력 형식을 제어하는 <strong>모든 테크닉의 기본 원리</strong>입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>3. 두 번째 원리</h3>
+<span className="keyword-highlight">프롬프트가 답을 닮는다</span>
+<p>첫 번째는 "뭘 해야 할지 말하라", 두 번째는 "프롬프트 스타일 = 출력 스타일"</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+### 프롬프트 스타일을 원하는 출력과 일치시키기
+
+프롬프트에 사용된 형식 스타일은 Claude의 응답 스타일에 영향을 줄 수 있습니다. 예를 들어, 프롬프트에서 마크다운을 제거하면 출력에서 마크다운의 양을 줄일 수 있습니다.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center" style={{padding: '0 80px'}}>
+<p style={{fontSize: '0.9em', lineHeight: 1.6, color: '#d97706', maxWidth: '800px', marginBottom: '10px', fontWeight: 600, letterSpacing: '0.05em'}}>📄 공식문서가 말하는 것</p>
+<p style={{fontSize: '1.2em', lineHeight: 1.9, maxWidth: '860px'}}>"프롬프트에 사용된 <strong style={{color: '#d97706', fontSize: '1.1em'}}>형식 스타일</strong>은 Claude의 응답 스타일에 영향을 줄 수 있습니다. 프롬프트에서 마크다운을 제거하면 출력에서 마크다운의 양을 줄일 수 있습니다."</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<div style={{fontSize: '112px', marginBottom: '12px', lineHeight: 1}}>🪞</div>
+<p>거울 효과 —<br/>격식체로 물으면 격식체로 답하고<br/>편하게 물으면 편하게 답합니다.<br/>내가 하는 대로 <strong>되돌아옵니다.</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>거울 효과</h3>
+<span className="keyword-highlight">프롬프트 스타일 = 출력 스타일</span>
+<p>마크다운 없는 답변을 원하면 프롬프트에서도 마크다운을 빼세요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>4. 6강 콜백</h3>
+<span className="keyword-highlight">XML 태그, 기억나시죠?</span>
+<p>오늘은 그 XML 태그를 <strong>출력 형식 표시자</strong>로 씁니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+### XML 형식 표시자 사용
+
+</DocOnly>
+
+---
+
+<DocOnly>
+
+```
+응답의 산문 부분을 <smoothly_flowing_prose_paragraphs>
+태그 안에 작성하세요.
+```
+
+</DocOnly>
+
+<SlideOnly>
+<div className="slide-focus-board">
+<span className="slide-note-pill">공식문서 예시</span>
+<code className="slide-tag-chip">응답의 산문 부분을 &lt;smoothly_flowing_prose_paragraphs&gt; 태그 안에 작성하세요.</code>
+<p className="muted">다음 슬라이드에서 태그 이름이 왜 중요한지 바로 연결합니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">원리</span>
+<div className="principle-body">
+<h3>형식의 이름을 태그로</h3>
+<p>"요약 세 줄" → <code>&lt;three_line_summary&gt;</code></p>
+<p>"슬랙 공지" → <code>&lt;slack_announcement&gt;</code></p>
+<p>이름만으로도 Claude에게 <strong>형식 신호</strong>를 줄 수 있습니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>5. 더 세밀한 제어</h3>
+<span className="keyword-highlight">"완전히 막진 마, 단 필요할 때만 써줘"</span>
+<p>한 줄 원칙을 넘어, 실무용 상세 프롬프트로 들어갑니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+### 마크다운 제어를 위한 상세 프롬프트
+
+</DocOnly>
+
+---
+
+<DocOnly>
+
+```xml
+<avoid_excessive_markdown_and_bullet_points>
+보고서, 문서, 기술 설명, 분석 또는 장문 콘텐츠를 작성할 때는
+완전한 문단과 문장을 사용하여 명확하고 흐르는 산문으로
+작성하세요.
+
+순서 목록(1. ...) 또는 비순서 목록(*)은 다음의 경우에만
+사용하세요:
+a) 목록 형식이 최선인 진정으로 개별적인 항목을 제시하는 경우
+b) 사용자가 명시적으로 목록이나 순위를 요청한 경우
+
+목표는 정보를 고립된 포인트로 분절하는 것이 아니라,
+아이디어를 통해 독자를 자연스럽게 안내하는 읽기 쉬운
+흐르는 텍스트입니다.
+</avoid_excessive_markdown_and_bullet_points>
+```
+
+ </DocOnly>
+
+<SlideOnly>
+<div className="slide-focus-board">
+<span className="slide-note-pill">상세 프롬프트의 핵심 구조</span>
+<code className="slide-tag-chip">&lt;avoid_excessive_markdown_and_bullet_points&gt;</code>
+<p><strong>보고서 · 분석 · 기술 설명</strong>은<br/>기본적으로 <strong>흐르는 산문</strong>으로 씁니다.</p>
+<p className="muted">다음 슬라이드에서 "언제 목록을 허용하는지"만 따로 짚습니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">핵심</span>
+<div className="principle-body">
+<h3>언제 목록을 허용?</h3>
+<p>a) 진정으로 <strong>개별적인 항목</strong>을 제시하는 경우</p>
+<p>b) 사용자가 <strong>명시적으로 목록</strong>을 요청한 경우</p>
+<p>완전히 금지가 아니라 <strong>언제 허용하는지 조건</strong>을 답니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">원리</span>
+<div className="principle-body">
+<h3>금지가 아닌 조건부 허용</h3>
+<p><strong>"하지 마" 대신 "이렇게 해"</strong>의 고급 버전 — 언제 쓰고 언제 쓰지 말지까지 구체적으로 안내</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>6. 실무 3사례</h3>
+<span className="keyword-highlight">보고서 · 슬랙 · 이메일</span>
+<p>매일 쓰는 문서에 오늘의 원리를 적용해 봅니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+## 실무에서 이렇게 쓰세요
+
+출력 형식을 제어하는 기법은 **보고서, 이메일, 슬랙 메시지** 등 매일 작성하는 문서에 바로 적용할 수 있습니다.
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/illustrations/06-xml-tags/boss-asking.png" alt="상사가 분기 보고서를 요청하는 장면" className="slide-illustration" />
+<p>상사가 <strong>분기 보고서</strong>를 요청했습니다.<br/>수치가 많고 내용이 복잡해요.<br/>그냥 "써줘"라고 하면 불릿이 잔뜩 — 어떻게 지시해야 할까요?</p>
+</div>
+</SlideOnly>
+
+---
+
+<UseCaseCard
+  emoji="📊"
+  title="임원 보고용 산문 형식"
+  description="불릿 포인트 나열이 아닌, 흐르는 문단 형태의 임원 보고서"
+  prompt={`다음 데이터를 기반으로 분기 성과 보고서를 작성해줘.
+
+형식 지침:
+- 매끄럽게 흐르는 산문 문단 3-4개로 작성해줘
+- 3-4개 문단으로 구성하고, 각 문단은 자연스럽게 연결되어야 해
+- 수치는 문장 안에 자연스럽게 녹여서 표현해줘
+- 톤: 간결하고 전문적, 임원진이 5분 안에 읽을 수 있는 분량`}
+/>
+
+---
+
+<SlideOnly>
+<div className="slide-compare-board">
+<div className="slide-compare-card bad">
+<span className="slide-compare-label">❌ 불릿 나열</span>
+<ul className="slide-compare-list">
+<li>매출 120억 (전년比 +15%)</li>
+<li>영업이익 18억 (전년比 +22%)</li>
+<li>신규 고객 350개사 확보</li>
+<li>유지율 92% 달성</li>
+</ul>
+</div>
+<div className="slide-compare-card good">
+<span className="slide-compare-label">✅ 3문단 산문</span>
+<p className="slide-compare-copy">2분기 매출은 120억 원으로 전년 동기 대비 15% 성장했고, 영업이익은 18억 원으로 22% 증가했습니다.</p>
+<p className="slide-compare-copy">신규 고객 350개사를 확보했고, 기존 고객 유지율도 92%를 기록하며 안정적인 수익 기반을 유지했습니다.</p>
+<p className="slide-compare-copy">지난 분기에 추진한 채널 재편과 계약 조건 개선이 맞물린 결과로 평가됩니다.</p>
+</div>
+</div>
+<p className="slide-comparison-caption">같은 데이터라도 형식 지침 하나면 반제품이 완제품이 됩니다.</p>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<div style={{fontSize: '112px', marginBottom: '12px', lineHeight: 1}}>💬</div>
+<p>두 번째 — <strong>팀 슬랙 공지.</strong><br/>마크다운이 제대로 안 먹고<br/>길면 안 읽힙니다. 이모지는 오히려 자연스러워요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<UseCaseCard
+  emoji="💬"
+  title="슬랙 메시지 형식"
+  description="슬랙에 바로 붙여넣을 수 있는 일반 텍스트 공지 작성"
+  prompt={`아래 내용으로 팀 슬랙 채널에 올릴 공지를 작성해줘.
+
+형식 지침:
+- 슬랙에 바로 붙여넣을 수 있는 일반 텍스트 공지 형식으로 작성해줘
+- 줄바꿈 중심으로, 한눈에 읽히게 구성해줘
+- 이모지를 적절히 활용해서 가독성을 높여줘
+- 첫 줄에 핵심 메시지, 이후 상세 내용 순서로
+- 200자 이내로 간결하게`}
+/>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/illustrations/06-xml-tags/confused-worker.png" alt="서문이 붙은 이메일에 당황한 직원" className="slide-illustration" />
+<p>세 번째 — <strong>거래처 이메일.</strong><br/>Claude는 기본적으로 서문을 붙입니다.<br/><strong>"물론이죠! 다음과 같이 작성해 드리겠습니다."</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<UseCaseCard
+  emoji="📧"
+  title="이메일 첫 문장부터 바로 본론"
+  description="첫 문장부터 용건으로 들어가는 거래처 후속 이메일"
+  prompt={`거래처에 보낼 미팅 후속 이메일을 작성해줘.
+
+첫 문장은 바로 본론으로 시작해줘.
+"안녕하세요, 지난 미팅에서 논의한..." 형태로 첫 문장을 시작해줘.
+마지막에 액션 아이템을 정리하고 끝내줘.`}
+/>
+
+---
+
+<DocOnly>
+
+| 용도 | 형식 기법 |
+|------|-----------|
+| 📊 임원 보고서 | 산문 문단 · 3–4단락 |
+| 💬 슬랙 메시지 | 200자 + 이모지 |
+| 📧 거래처 이메일 | 첫 문장부터 바로 본론 |
+
+</DocOnly>
+
+<SlideOnly>
+<div className="slide-pair-board">
+<span className="slide-note-pill">세 사례를 한 장에</span>
+<div className="slide-pair-row">
+<span className="slide-pair-usage">📊 임원 보고서</span>
+<strong className="slide-pair-technique">산문 문단 · 3-4단락</strong>
+</div>
+<div className="slide-pair-row">
+<span className="slide-pair-usage">💬 슬랙 메시지</span>
+<strong className="slide-pair-technique">200자 이내 · 이모지</strong>
+</div>
+<div className="slide-pair-row">
+<span className="slide-pair-usage">📧 거래처 이메일</span>
+<strong className="slide-pair-technique">첫 문장부터 바로 본론</strong>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>세 사례의 공통 패턴은?</h3>
+<span className="keyword-highlight">잠깐 생각해 보세요</span>
+<p>한 줄로 정리하면 — 이게 오늘의 진짜 공식입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">공식</span>
+<div className="principle-body">
+<h3>용도 × 형식 기법</h3>
+<p><strong>임원 보고서</strong> × 산문 문단</p>
+<p><strong>슬랙 메시지</strong> × 200자 + 이모지</p>
+<p><strong>거래처 이메일</strong> × 첫 문장부터 바로 본론</p>
+<p>용도를 먼저 정하고, 그 용도에 맞는 형식 기법을 짝지어라</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>여러분 업무로 확장</h3>
+<p>📝 <strong>회의록</strong> × 사내 위키 템플릿 형식</p>
+<p>🙋 <strong>고객 응대</strong> × 존댓말 + 3문장 이내</p>
+<p>🧑‍💻 <strong>코드 리뷰 코멘트</strong> × 불릿 + 근거 한 줄씩</p>
+<p><strong>용도 먼저, 형식 기법 다음</strong> — 이 순서가 핵심입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>8. LaTeX 출력</h3>
+<span className="keyword-highlight">수학·기술 문서를 다룰 때</span>
+<p>수식이 튀어나오는 상황에 대비한 실무 팁</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+### LaTeX 출력
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>Opus 4.6: 기본값이 LaTeX</h3>
+<p>수학 표현식, 방정식, 기술 설명에 <strong>기본적으로 LaTeX</strong>를 사용합니다</p>
+<p>일반 텍스트로 받고 싶었는데 <code>\frac&#123;a&#125;&#123;b&#125;</code> 같은 마크업이 나올 수 있습니다</p>
+</div>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+Claude Opus 4.6은 수학 표현식에 기본적으로 LaTeX를 사용합니다. 일반 텍스트를 선호한다면:
+
+</DocOnly>
+
+---
+
+```
+일반 텍스트로만 응답을 작성하세요. LaTeX, MathJax, 또는
+\( \), $, \frac{}{} 같은 마크업 표기법을 사용하지 마세요.
+모든 수학 표현식은 표준 텍스트 문자를 사용하세요.
+(예: 나눗셈에 "/", 곱셈에 "*", 지수에 "^")
+```
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>9. 문서 생성</h3>
+<span className="keyword-highlight">프레젠테이션 · 시각적 문서</span>
+<p>최신 Claude의 강점 — 첫 번째 시도에서 세련된 결과</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+## 문서 생성
+
+Claude의 최신 모델은 프레젠테이션, 애니메이션, 시각적 문서 생성에 뛰어납니다. 대부분의 경우 첫 번째 시도에서 세련되고 사용 가능한 출력을 생성합니다.
+
+</DocOnly>
+
+---
+
+```
+[주제]에 대한 전문적인 프레젠테이션을 만들어줘.
+세심한 디자인 요소, 시각적 계층 구조, 적절한 곳에
+매력적인 애니메이션을 포함해줘.
+```
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">3요소</span>
+<div className="principle-body">
+<h3>품질을 결정하는 세 단어</h3>
+<p>① <strong>세심한 디자인 요소</strong></p>
+<p>② <strong>시각적 계층 구조</strong></p>
+<p>③ <strong>매력적인 애니메이션</strong></p>
+<p>이 세 단어가 들어가느냐에 따라 결과물 품질이 확연히 달라집니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>10. Prefill 마이그레이션</h3>
+<span className="keyword-highlight">옛 기법의 정리</span>
+<p>Claude 4.6부터 사전 채움은 더 이상 지원되지 않습니다</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+## 사전 채움(Prefill) 응답에서 마이그레이션
+
+</DocOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<div style={{fontSize: '112px', marginBottom: '12px', lineHeight: 1}}>✏️</div>
+<p>사전 채움이란 —<br/>AI의 답변 <strong>첫 부분을 미리 채워넣어서</strong><br/>이어서 답하게 하는 기법.<br/>예: 어시스턴트 메시지를 <code>&#123;</code>로 시작하면 JSON 유도.</p>
+</div>
+</SlideOnly>
+
+---
+
+<Callout emoji="⚠️">
+Claude 4.6 모델부터 마지막 어시스턴트 턴의 사전 채움 응답은 **더 이상 지원되지 않습니다**. 모델 지능과 지시 따르기가 발전하여 대부분의 사전 채움 사용 사례에서 더 이상 이를 필요로 하지 않습니다.
+</Callout>
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>이유는 한 줄</h3>
+<span className="keyword-highlight">그냥 말로 지시하면 됩니다</span>
+</div>
+</SlideOnly>
+
+---
+
+<DocOnly>
+
+| 이전 사용 사례 | 마이그레이션 방법 |
+|--------------|----------------|
+| 출력 형식 강제 (JSON/YAML) | **Structured Outputs** 기능 사용 |
+| 서문 제거 | 명시적 지시로 소개를 건너뛰기 |
+| 나쁜 거부 방지 | 시스템 프롬프트에서 명시적 지시 |
+| 이어쓰기 | 부분 콘텐츠를 대화에 포함 후 계속 요청 |
+| 맥락 수화 / 역할 일관성 | 시스템 프롬프트와 대화 구조 활용 |
+
+</DocOnly>
+
+<SlideOnly>
+<div className="slide-migration-board">
+<span className="slide-note-pill">Prefill 대체 치트시트</span>
+<div className="slide-migration-grid">
+<div className="slide-migration-card">
+<strong>형식 강제</strong>
+<p>Structured Outputs</p>
+</div>
+<div className="slide-migration-card">
+<strong>서문 제거</strong>
+<p>명시적 지시</p>
+</div>
+<div className="slide-migration-card">
+<strong>나쁜 거부 방지</strong>
+<p>시스템 프롬프트</p>
+</div>
+<div className="slide-migration-card">
+<strong>이어쓰기</strong>
+<p>부분 콘텐츠 포함</p>
+</div>
+<div className="slide-migration-card">
+<strong>역할 일관성</strong>
+<p>시스템 + 대화 구조</p>
+</div>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">정리</span>
+<div className="principle-body">
+<h3>옛 기법 → 명시적 지시</h3>
+<p>"JSON으로 출력해줘" · "서문 없이 시작해" · "이 부분 이어서 완성해줘"</p>
+<p>오늘 배운 <strong>"이렇게 해"</strong>의 원리가 여기서도 그대로 작동합니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>오늘의 정리 ①</h3>
+<p><strong>"하지 마" 대신 "이렇게 해"</strong></p>
+<p>부정형 지시보다 긍정형 지시가 훨씬 효과적입니다</p>
+<p>AI한테도, 사람한테도 마찬가지 — 오늘의 첫 원리</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>오늘의 정리 ②</h3>
+<p><strong>거울 효과</strong></p>
+<p>프롬프트 스타일이 출력 스타일에 영향을 줍니다</p>
+<p>내가 쓰는 형식이 AI가 답하는 형식을 결정합니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>오늘의 정리 ③</h3>
+<p><strong>용도 × 형식 기법</strong></p>
+<p>임원 보고서 × 산문 · 슬랙 × 200자+이모지 · 이메일 × 서문 없이</p>
+<p>용도를 먼저 정하고, 그 용도에 맞는 형식 기법을 짝지으세요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>Ch.1 → Ch.2 프레임 회수</h3>
+<span className="keyword-highlight">일 시키기 → 결과물 품질</span>
+<p>"알아서 잘 써줘"보다 "보고서 형식, 3페이지, 임원용"이 낫습니다 — <strong>좋은 프롬프트는 좋은 업무 지시와 같습니다</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘 하나만 해보세요</h3>
+<span className="keyword-highlight">"___ 형식으로 써줘"</span>
+<p>프롬프트 끝에 이 한 줄을 붙이세요 — 빈칸에 용도(슬랙/보고서/이메일)를 채우면 반제품이 완제품이 됩니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>다음 시간: 도구 사용</h3>
+<span className="keyword-highlight">형식을 넘어, 행동으로</span>
+<p>AI가 답변만 하는 게 아니라 <strong>실제로 행동하게</strong> 만드는 법</p>
+</div>
+</SlideOnly>

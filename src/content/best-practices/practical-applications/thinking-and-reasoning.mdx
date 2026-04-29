@@ -1,0 +1,874 @@
+---
+title: 사고와 추론
+---
+
+import { Callout, Tabs } from 'nextra/components'
+
+# 사고와 추론
+
+<OriginalDocLink href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#thinking-and-reasoning">공식문서 원문 섹션 — 사고와 추론 (Thinking and Reasoning)</OriginalDocLink>
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>지난 시간 복습</h3>
+<span className="keyword-highlight">"제안해줘" → "실행해줘"</span>
+<p>도구 사용 — 행동 동사 하나로 AI가 실행하게 만들었죠</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>오늘의 여정</h3>
+<p>1. 장면 — 방향이 틀린 후배 이야기</p>
+<p>2. 단어 해부 — Thinking · Reasoning</p>
+<p>3. 역설 — "덜 생각하게 하라"</p>
+<p>4. 대응 3단계 — 과도한 사고 줄이기</p>
+<p>5. 적응형 사고 — AI가 스스로 조절</p>
+<p>6. 사고 팁 4가지 — 철저함·자기 점검</p>
+<p>7. 실무 3단계 — 일의 무게에 맞게</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<div style={{fontSize: '96px', marginBottom: '16px', lineHeight: 1}}>💼</div>
+<p>상상해 보세요.<br/>여러분 회사에 <strong>일 잘하는 후배</strong>가 한 명 있어요.<br/>실행력도 빠릅니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>그런데 문제가 하나 있어요.<br/>시키면 바로 뛰어드는데,<br/><strong>방향이 틀릴 때가 있어요.</strong></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>어느 날 이렇게 시켰어요</h3>
+<span className="keyword-highlight">"이거 간단히 조사해봐."</span>
+<p>"간단히"라는 말에 주목해 주세요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<img src="/illustrations/06-xml-tags/paper-pile-boss.png" alt="50페이지 보고서를 만든 후배" style={{maxHeight: '220px', marginBottom: '20px'}} />
+<p>3일 뒤 — 후배가 가져온 결과물은<br/><strong>50페이지짜리 보고서</strong>였어요.<br/><span className="muted">"아니… 간단히라고 했잖아…"</span></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>반대 경우도 있어요.<br/>복잡하게 따져봐야 하는 문제인데<br/><strong>5분 만에 대충 답</strong>을 가져오기도 해요.<br/><span className="muted">"이건 좀 더 깊이 생각해봐야 하는 건데…"</span></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>후배의 두 얼굴</h3>
+<p>간단한 일에 <strong>너무 많이 판다</strong> · 복잡한 일에 <strong>너무 얕게 판다</strong></p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>AI도 정확히 똑같아요</h3>
+<span className="keyword-highlight">간단한 질문에 과하게 · 복잡한 질문에 얕게</span>
+<p>오늘 배울 건 이걸 조절하는 법입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘의 질문</h3>
+<span className="keyword-highlight">AI가 얼마나 깊이 생각할지 조절하는 법</span>
+<p>행동(도구 사용)만 잘해서는 부족합니다 — 생각의 깊이도 조절해야 해요</p>
+</div>
+</SlideOnly>
+
+---
+
+<Callout emoji="💼">
+**직장인 학습 가이드**: 이 챕터는 Claude API 설정(`thinking`, `effort`)을 다루는 고급 내용을 포함합니다. Claude.ai를 쓰시는 분이라면 **"사고를 위한 팁"** 표와 프롬프트 예시 위주로 따라오세요. "단계별로 생각해줘", "찬반을 모두 검토한 후 결론을 내줘" 같은 한 마디로도 Claude의 사고 깊이를 높일 수 있습니다.
+</Callout>
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>직장인 학습 가이드</h3>
+<span className="keyword-highlight">API 설정 없이도 괜찮아요</span>
+<p>"단계별로 생각해줘" · "찬반 검토 후 결론" — 프롬프트 한 줄이 API 설정 역할을 합니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<div style={{fontSize: '112px', marginBottom: '12px', lineHeight: 1}}>🧠</div>
+<p>자 오늘의 주제 단어를 뜯어볼게요.<br/><strong>사고와 추론</strong>. 영어로 <strong>Thinking and Reasoning</strong>.<br/>두 단어의 어원이 달라요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>Thinking의 어원</h3>
+<span className="keyword-highlight">thencan — 마음속에서 떠올리다</span>
+<p>고대 영어 — 머릿속에서 뭔가 "떠오르는" 것</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>Reasoning의 어원</h3>
+<span className="keyword-highlight">ratio — 계산하다, 따져보다</span>
+<p>라틴어 — 이유를 조목조목 "따져보는" 것</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>두 단어를 이어 붙이면요.<br/><strong>떠올리고(Thinking) · 따져보는(Reasoning) 것.</strong><br/>즉, 직관과 논리 두 단계를 다 거치라는 뜻이에요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>"생각해봐"의 진짜 의미</h3>
+<p>단순히 답을 떠올리라는 게 아니라 — <strong>논리적으로 따져본 뒤에 답하라</strong>는 뜻</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>그리고 핵심은 하나 더</h3>
+<span className="keyword-highlight">사고의 깊이는 내가 조절한다</span>
+<p>AI가 알아서 생각하는 게 아니라 — 우리가 지시해야 합니다</p>
+</div>
+</SlideOnly>
+
+---
+
+## 과도한 사고와 지나친 철저함
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>자 여기서 공식문서의 <strong>흥미로운 문장 하나</strong>를 같이 읽어볼게요.<br/>이게 오늘의 반전입니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center" style={{padding: '0 80px'}}>
+<p style={{fontSize: '0.9em', lineHeight: 1.6, color: '#d97706', maxWidth: '800px', marginBottom: '10px', fontWeight: 600, letterSpacing: '0.05em'}}>📄 공식문서가 말하는 것 (1/2)</p>
+<p style={{fontSize: '1.25em', lineHeight: 2.0, maxWidth: '840px'}}>"Claude Opus 4.6은 이전 모델보다 훨씬 더 많은 <strong style={{color: '#d97706', fontSize: '1.1em'}}>사전 탐색</strong>을 수행합니다."</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center" style={{padding: '0 80px'}}>
+<p style={{fontSize: '0.9em', lineHeight: 1.6, color: '#d97706', maxWidth: '800px', marginBottom: '10px', fontWeight: 600, letterSpacing: '0.05em'}}>📄 공식문서가 말하는 것 (2/2)</p>
+<p style={{fontSize: '1.25em', lineHeight: 2.0, maxWidth: '840px'}}>"이전에 모델이 <strong style={{color: '#d97706', fontSize: '1.1em'}}>더 철저하도록 장려하는 프롬프트</strong>를 사용했다면 조정이 필요합니다."</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘의 역설</h3>
+<span className="keyword-highlight">"더 생각하게 하라"가 아니라 "덜 생각하게 하라"</span>
+<p>이 반전이 오늘 강의의 중심축입니다</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>이게 좀 이상하지 않아요?<br/>보통 AI한테 <strong>"더 생각해"</strong>라고 하잖아요.<br/>그런데 최신 모델은 반대예요.<br/><strong>너무 많이 생각하는 게 문제</strong>랍니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>최신 AI가 너무 <strong>똑똑해져서</strong> 생기는 문제예요.<br/>질문을 받으면<br/>"혹시 이것도 필요하지 않을까?"<br/>"이 경우도 고려해야 하지 않을까?"<br/>범위를 스스로 넓혀버립니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>어디서 본 얘기죠?</h3>
+<p>"간단히 조사해봐" → <strong>50페이지 보고서</strong>를 만든 후배. 바로 이게 <strong>과도한 사고</strong>입니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>해결책이 있습니다</h3>
+<span className="keyword-highlight">과도한 사고 대응 3단계</span>
+<p>앤트로픽이 공식문서에서 직접 제시하는 조정법</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">1</span>
+<div className="principle-body">
+<h3>포괄적 지시 → 타겟팅된 지시</h3>
+<p>"기본적으로 [도구]를 사용해" → "문제 이해를 <strong>높일 때</strong> [도구]를 사용해"</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>포괄적으로 시키면<br/>AI가 <strong>"언제나"</strong>로 해석해요.<br/>조건을 붙이면 —<br/>"필요할 때만"으로 동작합니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">2</span>
+<div className="principle-body">
+<h3>과도한 프롬프팅 제거</h3>
+<p>"<strong>의심스러우면</strong> [도구]를 사용해" 같은 문구 — 이제 빼세요. 과다 트리거를 유발합니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>예전 모델에 맞춰 쓰던 강조 표현이<br/>최신 모델에선 <strong>오버 트리거</strong>를 만들어요.<br/>"의심스러우면 찾아봐" → 늘 찾아봅니다.<br/>과도한 강조를 빼는 게 조정 포인트예요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">3</span>
+<div className="principle-body">
+<h3>노력(effort) 설정을 낮추기</h3>
+<p>그래도 과도하게 적극적이면 — <strong>high → medium → low</strong> 로 노력 설정을 내립니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<DocOnly>
+
+앤트로픽이 공식문서에서 제시하는 **결단력 유도 프롬프트**입니다. 과도한 사고를 막는 가장 실용적인 한 문단입니다.
+
+</DocOnly>
+
+```
+문제에 접근하는 방법을 결정할 때, 하나의 접근 방식을 선택하고
+그것에 전념하세요. 추론에 직접 모순되는 새로운 정보를 만나지
+않는 한 결정을 재검토하지 마세요. 두 가지 접근 방식을
+저울질하고 있다면, 하나를 선택하고 끝까지 해보세요.
+선택한 접근 방식이 실패하면 나중에 궤도를 수정할 수 있습니다.
+```
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>이거 어디서 들어본 조언 같지 않아요?</h3>
+<span className="keyword-highlight">"고민하지 말고 일단 하나 정해서 해봐"</span>
+<p>상사가 후배한테 해주는 바로 그 조언이에요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>과도한 사고를 막는 핵심</h3>
+<p>AI한테도 사람한테도 똑같아요 — <strong>결단력을 지시하는 것</strong></p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+## 사고 및 인터리브 사고 기능 활용
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>자 이제 반대 방향으로 가볼게요.<br/>AI가 더 <strong>똑똑하게</strong> 생각하게 만드는 법.<br/>핵심 개념은 <strong>"적응형 사고"</strong>입니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<Callout emoji="🧠">
+Claude Opus 4.6은 **적응형 사고**(`thinking: {type: "adaptive"}`)를 사용합니다. 내부 평가에서 적응형 사고는 확장 사고보다 안정적으로 더 나은 성능을 보여줍니다.
+</Callout>
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>적응형 사고 (Adaptive Thinking)</h3>
+<span className="keyword-highlight">AI가 스스로 사고량을 조절</span>
+<p>쉬운 질문 → 바로 답변 / 어려운 질문 → 깊이 생각</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>이게 왜 중요하냐면요.<br/>경력자를 떠올려 보세요.<br/>"<strong>이건 바로 답할 수 있고,<br/>이건 좀 고민해봐야 한다</strong>" —<br/>스스로 판단하잖아요. 그게 적응형이에요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">1</span>
+<div className="principle-body">
+<h3>Claude의 판단 기준 1</h3>
+<p><strong>노력 매개변수 (effort)</strong> — 높은 노력일수록 더 많이 생각합니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">2</span>
+<div className="principle-body">
+<h3>Claude의 판단 기준 2</h3>
+<p><strong>쿼리 복잡성</strong> — 복잡한 질문일수록 더 깊이 생각합니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>쉬운 쿼리라면?</h3>
+<span className="keyword-highlight">그냥 바로 응답</span>
+<p>사고가 필요하지 않은 질문에선 모델이 직접 답합니다 — 1+1에 30초 고민하지 않아요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>내부 평가 결과</h3>
+<span className="keyword-highlight">적응형 &gt; 확장 사고</span>
+<p>적응형 사고가 확장 사고보다 <strong>안정적으로 더 나은 성능</strong>을 보여줍니다</p>
+</div>
+</SlideOnly>
+
+---
+
+### 사고 동작 안내
+
+```
+도구 결과를 받은 후, 그 품질을 신중하게 반성하고 진행하기
+전에 최적의 다음 단계를 결정하세요. 사고를 사용하여 이
+새로운 정보를 기반으로 계획하고 반복한 다음, 최선의 다음
+행동을 취하세요.
+```
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>사고 동작 안내의 쓰임</h3>
+<span className="keyword-highlight">도구 사용 → 반성 → 다음 행동</span>
+<p>에이전트 코딩처럼 <strong>여러 단계</strong>를 거치는 작업에서 특히 유용</p>
+</div>
+</SlideOnly>
+
+---
+
+### 사고 빈도 줄이기
+
+```
+확장 사고는 지연 시간을 추가하며, 답변 품질을 의미 있게
+향상시킬 때만 사용해야 합니다 — 일반적으로 다단계 추론이
+필요한 문제에서. 의심스러우면, 직접 응답하세요.
+```
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>사고가 너무 잦을 때</h3>
+<span className="keyword-highlight">"의심스러우면, 직접 응답하세요"</span>
+<p>이 한 줄로 AI의 과도한 탐색을 진정시킬 수 있습니다</p>
+</div>
+</SlideOnly>
+
+---
+
+## 마이그레이션: 확장 사고 → 적응형 사고
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>API를 직접 쓰시는 분들을 위한<br/><strong>마이그레이션 가이드</strong>입니다.<br/>코드 한 줄 차이로 성능이 달라져요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<Tabs items={['이전 (확장 사고)', '이후 (적응형 사고)']}>
+  <Tabs.Tab>
+```python
+client.messages.create(
+    model="claude-sonnet-4-5-20250929",
+    max_tokens=64000,
+    thinking={"type": "enabled", "budget_tokens": 32000},
+    messages=[{"role": "user", "content": "..."}],
+)
+```
+
+`budget_tokens=32000` — 32,000 토큰만큼 무조건 생각하라는 뜻. 간단한 질문에도 토큰을 전부 씁니다.
+  </Tabs.Tab>
+  <Tabs.Tab>
+```python
+client.messages.create(
+    model="claude-opus-4-6",
+    max_tokens=64000,
+    thinking={"type": "adaptive"},
+    output_config={"effort": "high"},  # max, medium, low 가능
+    messages=[{"role": "user", "content": "..."}],
+)
+```
+
+`thinking={"type": "adaptive"}` + `effort` — 얼마나 생각할지는 AI가 판단합니다. 쉬운 질문엔 빠르게, 어려운 질문엔 깊이.
+  </Tabs.Tab>
+</Tabs>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>마이그레이션의 본질</h3>
+<p><strong>숫자로 정하던 사고량</strong>을 — <strong>AI가 스스로 결정</strong>하도록 넘기는 것</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>왜 이게 이득이냐면요</h3>
+<span className="keyword-highlight">"1+1은?"에 30초 고민하지 않습니다</span>
+<p>예전엔 간단한 질문에도 32,000 토큰을 다 썼어요 — 이제 필요할 때만 씁니다</p>
+</div>
+</SlideOnly>
+
+---
+
+## 사고를 위한 팁
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>자 여기서 공식문서가 주는<br/><strong>실용 팁 네 가지</strong>를 하나씩 볼게요.<br/>이게 오늘의 재료 창고입니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">1</span>
+<div className="principle-body">
+<h3>"철저하게 생각해" &gt; 단계별 계획</h3>
+<p>세세한 단계보다 <strong>일반적인 지시</strong> 한 마디가 더 나은 추론을 만듭니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>이게 좀 놀랍죠.<br/>우리가 "1단계는 이거, 2단계는 이거…" 안내하는 것보다<br/>그냥 <strong>"철저하게 생각해"</strong> 한 마디가 낫다는 거예요.<br/><span className="muted">왜 그럴까요?</span></p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>세세한 계획을 주면</h3>
+<span className="keyword-highlight">AI가 그 계획에 갇힙니다</span>
+<p>더 좋은 접근이 있어도 우리가 정한 순서만 따라가요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">2</span>
+<div className="principle-body">
+<h3>멀티샷 + &lt;thinking&gt; 태그</h3>
+<p>few-shot 예시 안에 <code>&lt;thinking&gt;</code> 태그로 <strong>추론 패턴</strong>을 보여주세요. Claude가 그 스타일을 일반화합니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">3</span>
+<div className="principle-body">
+<h3>수동 CoT — 사고 기능이 꺼진 경우</h3>
+<p><code>&lt;thinking&gt;</code>과 <code>&lt;answer&gt;</code> 태그로 <strong>추론과 출력을 분리</strong>시키세요</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">4</span>
+<div className="principle-body">
+<h3>자기 점검 — "끝내기 전에 검증하세요"</h3>
+<p>답변을 다 만든 뒤 <strong>스스로 체크</strong>하게 하는 한 줄의 마법</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>사람도 그렇잖아요.<br/>보고서 쓰고 나서 <strong>한 번 더 읽어보면</strong><br/>오타도 찾고 논리 빈틈도 보입니다.<br/>AI한테도 이 과정을 시키는 거예요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<Callout emoji="⚠️">
+확장 사고가 비활성화되어 있을 때, Claude Opus 4.5는 **"think"라는 단어에 특히 민감**합니다. `"consider"`, `"evaluate"`, `"reason through"` 같은 대안을 사용하세요.
+</Callout>
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>⚠️ 작은 주의사항</h3>
+<span className="keyword-highlight">"think" 단어 민감도</span>
+<p>확장 사고가 꺼진 Opus 4.5에서 "think"는 예상 밖 동작을 유발할 수 있어요</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>대안 동사 3가지</h3>
+<span className="keyword-highlight">consider · evaluate · reason through</span>
+<p>"생각해봐" 대신 "검토해봐 / 평가해봐 / 따져봐"로 우회</p>
+</div>
+</SlideOnly>
+
+---
+
+<DocOnly>
+
+| 팁 | 설명 |
+|----|------|
+| 일반적 지시 우선 | `"철저하게 생각해"`가 손으로 작성한 단계별 계획보다 더 나은 추론을 생산합니다 |
+| 멀티샷 + 사고 | few-shot 예시에 `<thinking>` 태그를 사용하여 추론 패턴을 보여주세요 |
+| 수동 CoT 대안 | 사고가 꺼져 있을 때 `<thinking>`과 `<answer>` 태그로 추론과 출력을 분리 |
+| 자기 점검 | `"끝내기 전에, [테스트 기준]에 대해 답변을 검증하세요."` 추가 |
+
+</DocOnly>
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>사고 팁 4가지 한 장 정리</h3>
+<p>1. <strong>"철저하게 생각해"</strong> 한 마디가 단계별 계획보다 낫다</p>
+<p>2. 멀티샷에 <strong>&lt;thinking&gt;</strong> 태그로 추론 패턴 보여주기</p>
+<p>3. 수동 CoT로 <strong>추론·출력 분리</strong></p>
+<p>4. <strong>"끝내기 전에 검증"</strong> — 자기 점검 한 줄 추가</p>
+</div>
+</SlideOnly>
+
+---
+
+## 실무에서 이렇게 쓰세요
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>자 이제 실무에서 바로 쓸 수 있게<br/><strong>상황별 사고 깊이</strong>를 3단계로 정리해볼게요.<br/>일의 무게에 맞춰 달리 쓰는 겁니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">1</span>
+<div className="principle-body">
+<h3>간단한 요청 — 바로 실행</h3>
+<p>"이 이메일 오타 수정해줘" / "표의 합계 계산해줘" — <strong>깊게 생각할 필요가 없는</strong> 일</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">2</span>
+<div className="principle-body">
+<h3>복잡한 분석 — 단계적 사고</h3>
+<p>"각 리스크에 대해 가능성과 영향도를 <strong>따져본 뒤</strong> 우선순위를 매겨줘" — 과정을 시키는 것</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>핵심 단어는 <strong>"따져본 뒤"</strong>예요.<br/>바로 결론으로 뛰지 말고<br/><strong>과정을 거치라</strong>는 지시.<br/>이 한 마디로 사고 깊이가 달라집니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">3</span>
+<div className="principle-body">
+<h3>중요한 결정 — 자기 점검 추가</h3>
+<p>"<strong>끝내기 전에</strong> 놓친 조항이 없는지 목차와 대조하면서 한 번 더 확인해줘"</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>이 마지막 한 줄이<br/>AI의 답변 품질을 <strong>한 단계</strong> 올려줍니다.<br/>사람한테도 "다 했으면 한 번 더 확인해"라고 하면<br/>꼼꼼해지잖아요. 똑같습니다.</p>
+</div>
+</SlideOnly>
+
+---
+
+<UseCaseCard
+  emoji="📑"
+  title="계약서 검토 — 단계적 사고 + 자기 점검"
+  description="복잡한 분석에는 과정을 시키고, 중요한 결정에는 자기 점검까지 붙입니다"
+  prompt={`<contract>
+{계약서 전문}
+</contract>
+
+위 계약서의 리스크를 분석해줘.
+
+작업 방식:
+1. 먼저 각 조항을 읽으며 리스크 후보를 찾아줘
+2. 각 리스크에 대해 발생 가능성과 영향도를 따져본 뒤 우선순위를 매겨줘
+3. 끝내기 전에, 놓친 조항이 없는지 목차와 대조하면서 한 번 더 확인해줘`}
+/>
+
+---
+
+<DocOnly>
+
+### 간단한 요청 — 바로 실행
+
+일상적인 요청에는 사고를 제한하세요.
+- "이 이메일 오타 수정해줘."
+- "이 표의 합계를 계산해줘."
+
+### 복잡한 분석 — 단계적 사고
+
+중요한 판단이 필요한 요청에는 사고를 유도하세요.
+- "이 사업 계획의 리스크를 분석해줘. 각 리스크에 대해 발생 가능성과 영향도를 따져본 뒤 우선순위를 매겨줘."
+
+### 중요한 결정 — 자기 점검 추가
+
+결과의 정확성이 중요한 경우 자기 점검을 추가하세요.
+- "이 계약서 검토 결과를 정리해줘. 끝내기 전에, 놓친 조항이 없는지 목차와 대조하면서 한 번 더 확인해줘."
+
+</DocOnly>
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>상황별 사고 깊이 3단계</h3>
+<p><strong>간단한 요청</strong> → 바로 실행</p>
+<p><strong>복잡한 분석</strong> → "따져본 뒤" (단계적 사고)</p>
+<p><strong>중요한 결정</strong> → "끝내기 전에 검증" (자기 점검)</p>
+</div>
+</SlideOnly>
+
+---
+
+## 📋 정리
+
+<SlideOnly>
+<div className="keyword-card summary">
+<h3>📋 오늘의 정리</h3>
+<p>1. 최신 AI는 <strong>과도하게 생각하는 게 문제</strong> — 독려 프롬프트를 덜어내라</p>
+<p>2. <strong>적응형 사고</strong>가 확장 사고보다 안정적 — 노력 설정으로 조절</p>
+<p>3. <strong>"철저하게 생각해" + "끝내기 전에 검증"</strong> 두 줄이면 충분</p>
+</div>
+</SlideOnly>
+
+<DocOnly>
+
+| # | 배운 것 | 핵심 |
+|---|---------|------|
+| 1 | **과도한 사고 방지** | 최신 AI는 너무 많이 생각하는 게 문제. 독려 프롬프트를 제거하거나 완화하라 |
+| 2 | **적응형 사고** | 확장 사고보다 안정적. 노력 매개변수(high/medium/low)로 사고 깊이 조절 |
+| 3 | **일반적 지시 우선** | "철저하게 생각해"가 세세한 단계별 계획보다 더 나은 추론을 생산한다 |
+
+</DocOnly>
+
+---
+
+<Callout emoji="💬">
+
+**"사고의 깊이를 조절하는 것은, 결국 일의 무게에 맞는 노력을 배분하는 것."**
+
+간단한 일엔 가볍게, 복잡한 일엔 깊게, 중요한 일엔 점검까지. AI한테도 사람한테도 원리는 똑같습니다.
+
+</Callout>
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘의 통찰</h3>
+<span className="keyword-highlight">사고 조절 = 일의 무게에 맞는 노력 배분</span>
+<p>간단한 일엔 가볍게 · 복잡한 일엔 깊게 · 중요한 일엔 점검까지</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card principle">
+<span className="principle-number">!</span>
+<div className="principle-body">
+<h3>AI 스킬 = 리더십 커뮤니케이션</h3>
+<p>후배한테 "간단히" · "깊이" · "한 번 더 확인" 지시하듯 — AI한테도 똑같이 합니다</p>
+</div>
+</div>
+</SlideOnly>
+
+---
+
+## 🚀 오늘의 액션
+
+<SlideOnly>
+<div className="slide-text-center">
+<p>오늘, 이것 <strong>하나만</strong> 해보세요.<br/>복잡한 질문을 할 때<br/>프롬프트 끝에 이 한 줄을 붙여보세요.</p>
+</div>
+</SlideOnly>
+
+---
+
+<SlideOnly>
+<div className="keyword-card hero">
+<h3>오늘의 한 줄</h3>
+<span className="keyword-highlight">"찬반을 모두 검토한 후 결론을 내줘"</span>
+<p>사고의 깊이가 달라지는 걸 직접 체감하실 거예요</p>
+</div>
+</SlideOnly>
+
+---
+
+<DocOnly>
+
+복잡한 질문을 할 때 **"찬반을 모두 검토한 후 결론을 내줘"**를 붙여보세요. 사고의 깊이가 달라지는 걸 느끼실 거예요.
+
+</DocOnly>
+
+<SlideOnly>
+<div className="keyword-card metric">
+<h3>다음 강의 예고</h3>
+<span className="keyword-highlight">에이전트 시스템</span>
+<p>오늘의 "사고" + 지난 시간의 "행동" = 자율적으로 일하는 AI 시스템</p>
+</div>
+</SlideOnly>
+
+> 다음 강의: **에이전트 시스템** · 오늘 배운 "사고"와 지난 시간의 "행동"을 합쳐서 자율적으로 생각하고 행동하는 AI를 다룹니다.
+
+<DocOnly>
+
+## 📚 더 알아보기
+
+<ResourceLink
+  href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices#thinking-and-reasoning"
+  type="official"
+  title="Anthropic 공식: Thinking and reasoning"
+  description="사고와 추론의 공식 가이드라인 — 과도한 사고 조정, 적응형 사고 활용법"
+/>
+<ResourceLink
+  href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking"
+  type="official"
+  title="Anthropic: Extended thinking"
+  description="확장 사고 기능의 상세 문서 — 토큰 예산, 인터리브 모드, 사용 사례"
+/>
+
+</DocOnly>
